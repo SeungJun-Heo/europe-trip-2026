@@ -145,7 +145,6 @@ html{scroll-behavior:smooth}
 <body>
 <div class="wrap">
 
-<!-- HEADER -->
 <div class="header">
   <div class="sub">FAMILY TRAVEL GUIDEBOOK</div>
   <h1>유럽 대모험</h1>
@@ -161,7 +160,8 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<!-- STATS -->
+<a href="https://wanderlog.com/view/parekapgtr/유럽-여행/shared" target="_blank" style="display:block; text-align:center; margin: 14px 14px 0; background:#2563EB; color:#fff; padding:12px; border-radius:10px; font-weight:800; font-size:14px; text-decoration:none; box-shadow:0 2px 4px rgba(37,99,235,0.2);">🗺️ Wanderlog 전체 상세 일정 보기</a>
+
 <div class="stats">
   <div class="stat"><div class="n">27</div><div class="l">일</div></div>
   <div class="stat"><div class="n">7</div><div class="l">도시</div></div>
@@ -169,22 +169,35 @@ html{scroll-behavior:smooth}
   <div class="stat"><div class="n">26</div><div class="l">박</div></div>
 </div>
 
-
-<!-- EUROPE MAP -->
 <div style="margin:14px 14px 0;border-radius:14px;overflow:hidden;border:1px solid #ddd;background:#fff">
   <div style="font-size:13px;font-weight:700;color:#1D4ED8;padding:12px 16px 8px;text-align:center;letter-spacing:1px">🗺️ 여행 루트</div>
   <div id="europe-map" style="width:100%;height:320px"></div>
   <div style="text-align:center;font-size:11px;color:#5D6D7E;padding:8px 16px 12px">인천 ✈ 로마 → 소렌토 → 피렌체 → 베네치아 → 인터라켄 → 파리 → 런던 ✈ 인천</div>
 </div>
 
-<!-- FLIGHTS -->
 <div class="card card-blue">
   <div class="label" style="color:#1D4ED8">✈️ 항공편</div>
   <div>출국: <b>KE931</b> 인천→로마(FCO) 4/29</div>
   <div>귀국: <b>KE908</b> 런던(LHR)→인천 5/25 19:35</div>
 </div>
 
-<!-- BOOKINGS -->
+<div class="card card-yellow" style="margin-top:14px;">
+  <div class="label" style="color:#B45309">🎟️ 주요 교통 패스 전략</div>
+  <div><b>1. 유레일 글로벌 패스 5일권</b> (사용 일정 확정)</div>
+  <ul style="margin-left:16px;font-size:12px;color:#4B5563;margin-top:4px;margin-bottom:10px;line-height:1.5">
+    <li><b style="color:#B45309">Day 1 (5/6):</b> 나폴리 → 피렌체 <span style="font-size:10px">(Frecciarossa 필수 예약)</span></li>
+    <li><b style="color:#B45309">Day 2 (5/8):</b> 피렌체 ↔ 피사 <span style="font-size:10px">(지역열차, 예약 불필요)</span></li>
+    <li><b style="color:#B45309">Day 3 (5/9):</b> 피렌체 → 베네치아 <span style="font-size:10px">(Frecciarossa 필수 예약)</span></li>
+    <li><b style="color:#B45309">Day 4 (5/11):</b> 베네치아 → 밀라노 → 스위스 인터라켄 <span style="font-size:10px">(EC 구간 필수 예약)</span></li>
+    <li><b style="color:#B45309">Day 5 (5/15):</b> 인터라켄 → 파리 <span style="font-size:10px">(바젤 출발 TGV 필수 예약)</span></li>
+  </ul>
+  <div><b>2. 스위스 융프라우 패스 vs 동신항운 쿠폰</b></div>
+  <div style="font-size:12px;color:#4B5563;margin-top:4px;line-height:1.5">
+    - <b>융프라우 트래블 패스 (3~4일권 권장):</b> 하더쿨름, 피르스트 곤돌라, 브리엔츠 유람선 무제한 탑승 가능. 융프라우요흐 등반 시 아이거글레쳐 연결 티켓만 별도 구매.<br>
+    - 일정(5/12~5/14) 내 날씨가 맑아 산악 열차를 매일 탈 경우 패스가 유리함.
+  </div>
+</div>
+
 <button class="bk-btn" onclick="document.querySelector('.bk-list').classList.toggle('open');this.textContent=document.querySelector('.bk-list').classList.contains('open')?'▲ 예약번호 접기':'▼ 전체 예약번호 보기'">▼ 전체 예약번호 보기</button>
 <div class="bk-list">
   <div class="bk-row"><span>로마 숙소</span><span class="bk-ref">HMMRBEHCNT</span></div>
@@ -200,9 +213,6 @@ html{scroll-behavior:smooth}
   <div class="bk-row"><span>귀국 KE908</span><span class="bk-ref">LHR→ICN 5/25</span></div>
 </div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- ROME -->
-<!-- ═══════════════════════════════════════════ -->
 <div class="city" id="rome">
   <div class="hero">
     <img src="https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="로마" loading="lazy">
@@ -252,7 +262,7 @@ html{scroll-behavior:smooth}
     <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">2일차 4/30(수) — 바티칸</div><ul><li>오전: 바티칸 박물관 + 시스티나 성당 (투어 예약!)</li><li>성 베드로 대성당 & 쿠폴라 등반</li><li>점심: Pizzarium Bonci (바티칸 근처)</li><li>오후: 산탄젤로 성 또는 보르게세 공원</li></ul></div>
     <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">3일차 5/1(목) — 시내 도보투어</div><ul><li>보르게세 공원 → 스페인 계단</li><li>트레비 분수 → 판테온</li><li>나보나 광장 주변 산책</li><li>저녁: 트라스테베레 저녁식사</li></ul></div>
     <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">4일차 5/2(금) — 고대 로마</div><ul><li>오전: 캄포 데 피오리 시장 산책</li><li><b>16:30 콜로세움 입장 (예약 확정!)</b></li><li>포로 로마노 → 트라스테베레 저녁</li></ul></div>
-    <div class="transport"><div class="title">➡️ 5/3: 소렌토로 이동</div><div class="detail">테르미니→나폴리(Frecciarossa 1h10m), 나폴리에서 피자 점심, Circumvesuviana→소렌토(1h)</div><div class="total">총 약 3시간 (나폴리 점심 포함 반나절)</div></div>
+    <div class="transport"><div class="title">➡️ 5/3: 소렌토로 이동 (유레일 패스 미사용 구간)</div><div class="detail">테르미니→나폴리(Frecciarossa 1h10m), 나폴리에서 피자 점심, Circumvesuviana 사철→소렌토(1h)</div><div class="total">총 약 3시간 (나폴리 점심 포함 반나절)</div></div>
   </div>
   <div id="rome-food" class="tab-content">
     <div class="food-item"><span class="emoji">🍝</span><div><span class="fn">까르보나라</span> <span class="fw">Da Enzo al 29 (트라스테베레)</span><div class="ft">줄 서서 먹는 맛집</div></div></div>
@@ -280,7 +290,6 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<!-- ═══ SORRENTO ═══ -->
 <div class="city" id="sorrento">
   <div class="hero"><img src="https://images.pexels.com/photos/18771862/pexels-photo-18771862.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="소렌토" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>소렌토 <span>Sorrento</span></h2><div class="dt">아말피 해안의 관문 · 5/3–6 · 3박</div></div><div class="badge" style="background:#E67E22">3박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Casa Dominova de Luxe</div><div class="addr">소렌토 중심가, Corso Italia</div><div class="meta">체크인 14:00 / 체크아웃 10:00 · 구시가지 도보 5분</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5952152017</div><a href="https://maps.google.com/?q=Sorrento+Italy" target="_blank" class="map-link">📍 지도 보기</a></div></div></div>
@@ -294,14 +303,13 @@ html{scroll-behavior:smooth}
     <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">5일차 5/3(토) — 이동&탐방</div><ul><li>로마→나폴리(Frecciarossa) → 나폴리 피자 점심!</li><li>Circumvesuviana로 소렌토 도착, 체크인</li><li>구시가지 산책, 마리나 그란데 석양</li></ul></div>
     <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">6일차 5/4(일) — 아말피 해안</div><ul><li>포지타노 → 아말피 해안 드라이브 (SITA 버스 or 페리)</li><li>포지타노 절벽 전망 + 해변</li><li>아말피 마을 & 대성당</li></ul></div>
     <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">7일차 5/5(월) — 카프리 섬</div><ul><li>카프리 섬 페리 (소렌토 항구에서 약 25분)</li><li>파란 동굴 (해상상태 확인 필수!)</li><li>아우구스투스 정원, 카프리 마을 산책</li></ul></div>
-    <div class="transport"><div class="title">➡️ 5/6: 피렌체로 이동</div><div class="detail">Circumvesuviana→나폴리 중앙역, Frecciarossa→피렌체 SMN</div><div class="total">총 약 4시간</div></div>
+    <div class="transport"><div class="title">➡️ 5/6: 피렌체로 이동 <b style="color:#DC2626">(유레일 패스 Day 1)</b></div><div class="detail">Circumvesuviana 사철→나폴리 중앙역, Frecciarossa(좌석 필수 예약)→피렌체 SMN</div><div class="total">총 약 4시간</div></div>
   </div>
   <div id="sorrento-food" class="tab-content"><div class="food-item"><span class="emoji">🦐</span><div><span class="fn">해산물</span> <span class="fw">Bagni Delfino</span><div class="ft">마리나 그란데 바다 바로 앞</div></div></div><div class="food-item"><span class="emoji">🍕</span><div><span class="fn">피자 나폴레타나</span><div class="ft">나폴리 근처 = 최고의 피자!</div></div></div><div class="food-item"><span class="emoji">🍋</span><div><span class="fn">리몬첼로</span> <span class="fw">레몬 농장</span><div class="ft">시음+견학 체험</div></div></div></div>
   <div id="sorrento-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #E67E22">📸 마리나 그란데 — 파란 보트들 배경</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 포지타노 절벽 전망대 — 아말피 대표 풍경</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 빌라 코무날레 정원 석양</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 파란 동굴 내부 (방수케이스!)</div></div>
-  <div id="sorrento-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• Circumvesuviana 승차권 탑승 전 구매</div><div class="tip">• 폼페이: 물·선크림 필수, 그늘 적음</div><div class="tip">• 아말피 해안 버스: 멀미약 준비</div></div></div>
+  <div id="sorrento-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• Circumvesuviana 승차권 탑승 전 구매 (유레일 사용 불가)</div><div class="tip">• 폼페이: 물·선크림 필수, 그늘 적음</div><div class="tip">• 아말피 해안 버스: 멀미약 준비</div></div></div>
 </div>
 
-<!-- ═══ FLORENCE ═══ -->
 <div class="city" id="florence">
   <div class="hero"><img src="https://images.pexels.com/photos/31357719/pexels-photo-31357719.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="피렌체" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>피렌체 <span>Firenze</span></h2><div class="dt">르네상스의 심장 · 5/6–9 · 3박</div></div><div class="badge" style="background:#8E44AD">3박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">7Florence B&B</div><div class="addr">피렌체 중심가, 두오모 도보 10분 이내</div><div class="meta">체크인 14:00 / 체크아웃 10:30</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5083989451</div><a href="https://maps.google.com/?q=Florence+Duomo" target="_blank" class="map-link">📍 지도</a></div></div></div>
@@ -314,15 +322,14 @@ html{scroll-behavior:smooth}
   <div id="florence-sch" class="tab-content">
     <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">8일차 5/6(화) — 도착</div><ul><li>나폴리 경유 피렌체 도착 (da Michele 점심)</li><li>두오모 광장 산책, 세례당</li><li>저녁: Trattoria Dall'Oste</li></ul></div>
     <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">9일차 5/7(수) — 미술관 & 석양</div><ul><li>오전: 우피치 미술관</li><li>베키오 다리 산책</li><li>미켈란젤로 광장 석양 (피렌체 최고 뷰!)</li></ul></div>
-    <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">10일차 5/8(목) — 피사 당일치기</div><ul><li>피사의 사탑 방문 (기차 약 1시간)</li><li>광장에서 기울어진 사진 찍기!</li><li>피렌체 복귀 후 마지막 저녁</li></ul></div>
-    <div class="transport"><div class="title">➡️ 5/9: 베네치아로 이동</div><div class="detail">Frecciarossa 피렌체 SMN→베네치아 산타 루치아</div><div class="total">약 2시간</div></div>
+    <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">10일차 5/8(목) — 피사 당일치기 <b style="color:#DC2626">(유레일 패스 Day 2)</b></div><ul><li>피사의 사탑 방문 (기차 약 1시간, 유레일 무료)</li><li>광장에서 기울어진 사진 찍기!</li><li>피렌체 복귀 후 마지막 저녁</li></ul></div>
+    <div class="transport"><div class="title">➡️ 5/9: 베네치아로 이동 <b style="color:#DC2626">(유레일 패스 Day 3)</b></div><div class="detail">Frecciarossa 피렌체 SMN→베네치아 산타 루치아 (좌석 예약 필수)</div><div class="total">약 2시간</div></div>
   </div>
   <div id="florence-food" class="tab-content"><div class="food-item"><span class="emoji">🥩</span><div><span class="fn">비스테카 피오렌티나</span> <span class="fw">Trattoria Mario</span><div class="ft">T본 스테이크 무게 단위 주문</div></div></div><div class="food-item"><span class="emoji">🥖</span><div><span class="fn">람프레도토</span> <span class="fw">All'Antico Vinaio</span><div class="ft">피렌체 대표 길거리 음식</div></div></div><div class="food-item"><span class="emoji">🍦</span><div><span class="fn">젤라또</span> <span class="fw">Vivoli / La Carraia</span><div class="ft">피렌체 최고</div></div></div></div>
   <div id="florence-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 미켈란젤로 광장 석양 (일몰 30분 전!)</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 두오모 돔 꼭대기 파노라마</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 베키오 다리 위 아르노강 배경</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 두오모 정면 가족사진</div></div>
   <div id="florence-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 우피치·아카데미아: 온라인 예매 필수!</div><div class="tip">• 돔 클라임: 사전 예약 (463계단, 엘베 없음)</div><div class="tip">• 산 로렌초 시장: 가죽 흥정 가능</div></div></div>
 </div>
 
-<!-- ═══ VENICE ═══ -->
 <div class="city" id="venice">
   <div class="hero"><img src="https://images.pexels.com/photos/797724/pexels-photo-797724.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="베네치아" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>베네치아 <span>Venezia</span></h2><div class="dt">운하의 도시 · 5/9–11 · 2박</div></div><div class="badge" style="background:#2980B9">2박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Ca' Rielo</div><div class="addr">베네치아 본섬</div><div class="meta">체크인 14:00 / 체크아웃 10:00 · 바포레토 접근</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">6147616473</div><a href="https://maps.google.com/?q=Venice+Italy" target="_blank" class="map-link">📍 지도</a></div></div></div>
@@ -335,37 +342,35 @@ html{scroll-behavior:smooth}
   <div id="venice-sch" class="tab-content">
     <div class="day" style="border-color:#2980B9"><div class="dt" style="color:#2980B9">11일차 5/9(토) — 도착 & 카나레조</div><ul><li>피렌체→베네치아 산타 루치아 (Frecciarossa)</li><li>바포레토로 숙소 이동 (패스 구매!)</li><li>카나레조 지구 산책 → 리알토 다리</li><li>치케티 투어 (바카리 3-4곳)</li></ul></div>
     <div class="day" style="border-color:#2980B9"><div class="dt" style="color:#2980B9">12일차 5/10(일) — 산마르코 & 곤돌라</div><ul><li>산마르코 광장 & 대성당</li><li>두칼레 궁전 (도제의 궁전)</li><li>Libreria Acqua Alta (물에 잠기는 서점!)</li><li>곤돌라 탑승 (석양 코스 추천)</li></ul></div>
-    <div class="transport"><div class="title">➡️ 5/11: 인터라켄으로 이동 (다구간)</div><div class="detail">07:18 Frecciarossa 베네치아→밀라노, 10:10 EC→키아소, 14:06 루체른→인터라켄</div><div class="total">약 7시간 (스위스 알프스 경치!)</div></div>
+    <div class="transport"><div class="title">➡️ 5/11: 인터라켄으로 이동 <b style="color:#DC2626">(유레일 패스 Day 4)</b></div><div class="detail">07:18 Frecciarossa 베네치아→밀라노(예약필수), 10:10 EC→키아소(예약필수), 14:06 루체른→인터라켄</div><div class="total">약 7시간 (스위스 알프스 경치!)</div></div>
   </div>
   <div id="venice-food" class="tab-content"><div class="food-item"><span class="emoji">🍷</span><div><span class="fn">치케티</span> <span class="fw">바카리(와인바)</span><div class="ft">타파스처럼 1개 1-3유로</div></div></div><div class="food-item"><span class="emoji">🍹</span><div><span class="fn">스프리츠</span> <span class="fw">운하변 바</span><div class="ft">아페롤 스프리츠 한 잔!</div></div></div></div>
   <div id="venice-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #2980B9">📸 리알토 다리 위 — 대운하 뷰</div><div class="photo-spot" style="border-left:3px solid #2980B9">📸 산마르코 광장 종탑 꼭대기 전경</div><div class="photo-spot" style="border-left:3px solid #2980B9">📸 곤돌라 좁은 운하 통과 시</div></div>
   <div id="venice-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 바포레토 패스: 24hr €25 / 48hr €35 / 72hr €45</div><div class="tip">• 100% 도보 도시 — 편한 신발 필수</div><div class="tip">• 골목은 진짜 미로 — 구글맵 필수!</div></div></div>
 </div>
 
-<!-- ═══ INTERLAKEN ═══ -->
 <div class="city" id="interlaken">
   <div class="hero"><img src="https://images.pexels.com/photos/14699769/pexels-photo-14699769.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="인터라켄" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">스위스</div><h2>인터라켄 <span>Interlaken</span></h2><div class="dt">알프스의 낙원 · 5/11–15 · 4박</div></div><div class="badge" style="background:#27AE60">4박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Holzhaus by Interlaken</div><div class="addr">인터라켄 지역, 알프스 전망 목조주택</div><div class="meta">체크인 15:00 / 체크아웃 10:00</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5828736305</div><a href="https://maps.google.com/?q=Interlaken+Switzerland" target="_blank" class="map-link">📍 지도</a></div></div></div>
   <div class="tabs"><button class="tab active" style="background:#27AE60" onclick="switchTab('interlaken','att',this,'#27AE60')">관광지</button><button class="tab" onclick="switchTab('interlaken','sch',this,'#27AE60')">일정</button><button class="tab" onclick="switchTab('interlaken','food',this,'#27AE60')">맛집</button><button class="tab" onclick="switchTab('interlaken','photo',this,'#27AE60')">포토스팟</button><button class="tab" onclick="switchTab('interlaken','tips',this,'#27AE60')">팁</button></div>
   <div id="interlaken-att" class="tab-content active">
-    <div class="att-card"><img src="https://images.pexels.com/photos/2774415/pexels-photo-2774415.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>융프라우요흐 (Top of Europe)</h4><p>해발 3,454m 유럽의 지붕! 얼음궁전·스핑크스 전망대·알레치 빙하. <b>5/12 방문</b>. ~CHF200/인.</p><a class="ml" href="https://maps.google.com/?q=Jungfraujoch" target="_blank">📍 Maps</a></div></div>
-    <div class="att-card"><img src="https://images.pexels.com/photos/13818274/pexels-photo-13818274.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>하더 쿨름 (Harder Kulm)</h4><p>인터라켄 위 전망대. 툰 호수·브리엔츠 호수 파노라마! <b>5/12 저녁</b>. 퍼니쿨라 10분.</p><a class="ml" href="https://maps.google.com/?q=Harder+Kulm+Interlaken" target="_blank">📍 Maps</a></div></div>
-    <div class="att-card"><img src="https://images.pexels.com/photos/13612696/pexels-photo-13612696.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>그린델발트 피르스트 (First)</h4><p>절벽 산책로(Cliff Walk) + 피르스트 플라이어 짚라인. <b>5/13 방문</b>. 곤돌라로 이동.</p><a class="ml" href="https://maps.google.com/?q=Grindelwald+First" target="_blank">📍 Maps</a></div></div>
-    <div class="att-card"><img src="https://images.pexels.com/photos/30779923/pexels-photo-30779923.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>브리엔츠 & 발렌베르크</h4><p>에메랄드빛 브리엔츠 호수 마을. 로트호른반 증기기관차·발렌베르크 야외박물관. <b>5/14 방문</b>.</p><a class="ml" href="https://maps.google.com/?q=Brienz+Switzerland" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/2774415/pexels-photo-2774415.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>융프라우요흐 (Top of Europe)</h4><p>해발 3,454m 유럽의 지붕! <b>5/12 방문</b>. 융프라우 패스 소지 시 연결 구간만 별도 예매.</p><a class="ml" href="https://maps.google.com/?q=Jungfraujoch" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/13818274/pexels-photo-13818274.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>하더 쿨름 (Harder Kulm)</h4><p>인터라켄 위 전망대. <b>5/12 저녁</b>. 융프라우 패스 무료!</p><a class="ml" href="https://maps.google.com/?q=Harder+Kulm+Interlaken" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/13612696/pexels-photo-13612696.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>그린델발트 피르스트 (First)</h4><p>절벽 산책로. <b>5/13 방문</b>. 융프라우 패스 곤돌라 무료 탑승.</p><a class="ml" href="https://maps.google.com/?q=Grindelwald+First" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/30779923/pexels-photo-30779923.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>브리엔츠 호수</h4><p>에메랄드빛 호수 마을. <b>5/14 방문</b>. 융프라우 패스 유람선 무료 탑승.</p><a class="ml" href="https://maps.google.com/?q=Brienz+Switzerland" target="_blank">📍 Maps</a></div></div>
   </div>
   <div id="interlaken-sch" class="tab-content">
     <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">13일차 5/11(일) — 도착</div><ul><li>베네치아→밀라노→키아소→루체른→인터라켄 (다구간)</li><li>Holzhaus 체크인, 아레강 산책</li><li>일찍 저녁 & 휴식 (긴 이동일)</li></ul></div>
     <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">14일차 5/12(월) — 하더 쿨름 & 융프라우</div><ul><li>이른 출발! 융프라우요흐 열차 (Top of Europe)</li><li>얼음궁전, 스핑크스 전망대, 알레치빙하</li><li>고산병 주의 — 천천히, 물 충분히</li><li>하산 후 하더 쿨름 전망대 (저녁 석양 추천)</li></ul></div>
-    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">15일차 5/13(수) — 피르스트 (First)</div><ul><li>그린델발트 피르스트 곤돌라</li><li>절벽 산책로 (Cliff Walk) — 알프스 파노라마!</li><li>피르스트 플라이어 (짚라인) 도전?</li><li>그린델발트 마을에서 점심</li></ul></div>
-    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">16일차 5/14(목) — 브리엔츠</div><ul><li>브리엔츠 마을 방문</li><li>증기기관차 체험, 발렌베르크 야외박물관</li><li>브리엔츠 호수 유람</li><li>스위스 마지막 저녁</li></ul></div>
-    <div class="transport"><div class="title">➡️ 다음: 파리</div><div class="detail">인터라켄→바젤, 14:34 TGV Lyria 바젤→파리 리옹역 (X8PGBS)</div><div class="total">약 5시간</div></div>
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">15일차 5/13(화) — 피르스트 (First)</div><ul><li>그린델발트 피르스트 곤돌라</li><li>절벽 산책로 (Cliff Walk) — 알프스 파노라마!</li><li>피르스트 플라이어 (짚라인) 도전?</li><li>그린델발트 마을에서 점심</li></ul></div>
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">16일차 5/14(수) — 브리엔츠</div><ul><li>브리엔츠 마을 방문</li><li>증기기관차 체험, 발렌베르크 야외박물관</li><li>브리엔츠 호수 유람</li><li>스위스 마지막 저녁</li></ul></div>
+    <div class="transport"><div class="title">➡️ 다음: 파리 <b style="color:#DC2626">(유레일 패스 Day 5)</b></div><div class="detail">인터라켄→바젤, 14:34 TGV Lyria 바젤→파리 리옹역 (TGV 예약 필수, X8PGBS)</div><div class="total">약 5시간</div></div>
   </div>
   <div id="interlaken-food" class="tab-content"><div class="food-item"><span class="emoji">🧀</span><div><span class="fn">퐁뒤</span><div class="ft">스위스 필수 체험! 그뤼에르+에멘탈 치즈</div></div></div><div class="food-item"><span class="emoji">🥔</span><div><span class="fn">라클렛 & 뢰스티</span><div class="ft">녹인 치즈+감자 / 스위스 해시브라운</div></div></div><div class="food-item"><span class="emoji">🏪</span><div><span class="fn">쿱/미그로 슈퍼마켓</span><div class="ft">가성비 식사의 구원자!</div></div></div></div>
   <div id="interlaken-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #27AE60">📸 융프라우요흐 스핑크스 전망대 — 만년설 배경</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 하더 쿨름 — 두 호수 파노라마</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 그린델발트 피르스트 절벽 산책로 (Cliff Walk)</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 브리엔츠 호수 에메랄드빛</div></div>
-  <div id="interlaken-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 융프라우: 맑은 날! jungfrau.ch 웹캠 확인</div><div class="tip">• 물가 매우 비쌈 — 쿱/미그로 적극 활용</div><div class="tip">• 5월 산 위는 춥고 눈 — 레이어링 필수</div><div class="tip">• 스위스프랑(CHF) 필요!</div></div></div>
+  <div id="interlaken-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 융프라우 패스 vs 동신항운: 여행 일정에 맞게 산악열차 빈도수 확인 후 결제</div><div class="tip">• 물가 매우 비쌈 — 쿱/미그로 적극 활용</div><div class="tip">• 5월 산 위는 춥고 눈 — 레이어링 필수</div><div class="tip">• 스위스프랑(CHF) 필요!</div></div></div>
 </div>
 
-<!-- ═══ PARIS ═══ -->
 <div class="city" id="paris">
   <div class="hero"><img src="https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="파리" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">프랑스</div><h2>파리 <span>Paris</span></h2><div class="dt">빛의 도시 · 5/15–20 · 5박</div></div><div class="badge" style="background:#2C3E50">5박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">30 Avenue de Suffren</div><div class="addr">7구, 에펠탑 도보 10분</div><div class="meta">체크인 16:00 / 체크아웃 11:00 · 샹 드 마르스 공원 옆</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">HM5QPNKCFD</div><a href="https://maps.google.com/?q=30+Avenue+de+Suffren+Paris" target="_blank" class="map-link">📍 지도</a></div></div></div>
@@ -390,7 +395,6 @@ html{scroll-behavior:smooth}
   <div id="paris-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 뮤지엄 패스: 60개+ 박물관 무료입장</div><div class="tip">• 에펠탑 주변 사기꾼 주의! 디즈니랜드는 하루 종일 잡기</div><div class="tip">• 야간 에펠탑 반짝임: 매시 정각 5분</div><div class="tip">• 베르사유: 화요일 휴관!</div></div></div>
 </div>
 
-<!-- ═══ LONDON ═══ -->
 <div class="city" id="london">
   <div class="hero"><img src="https://images.pexels.com/photos/30624831/pexels-photo-30624831.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="런던" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">영국</div><h2>런던 <span>London</span></h2><div class="dt">왕실의 수도 · 5/20–25 · 5박</div></div><div class="badge" style="background:#E74C3C">5박</div></div>
   <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Park Plaza County Hall</div><div class="addr">South Bank — 런던아이 도보 2분, 빅벤 도보 5분!</div><div class="meta">체크인 15:00 / 체크아웃 12:00</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">2Z5PS8VQ</div><a href="https://maps.google.com/?q=Park+Plaza+County+Hall+London" target="_blank" class="map-link">📍 지도</a></div></div></div>
@@ -420,7 +424,6 @@ html{scroll-behavior:smooth}
 </div>
 
 
-<!-- MUSICALS -->
 <div style="margin:0 14px 24px;background:#FFF7ED;border-radius:14px;padding:18px;border:1px solid #FDBA74">
   <h3 style="font-size:16px;font-weight:800;color:#C2410C;margin:0 0 12px">🎭 뮤지컬 & 공연 일정</h3>
   <div style="background:white;border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid #E74C3C">
@@ -441,7 +444,6 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<!-- EMERGENCY -->
 <div class="emergency">
   <h3>🆘 긴급 연락처</h3>
   <div class="grid">
@@ -458,7 +460,6 @@ html{scroll-behavior:smooth}
 </div>
 
 
-<!-- CHECKLIST -->
 <div style="margin:0 14px 24px;background:#F0FDF4;border-radius:14px;padding:18px;border:1px solid #86EFAC">
   <h3 style="font-size:16px;font-weight:800;color:#166534;margin:0 0 14px">✅ 짐 싸기 체크리스트</h3>
   <div id="checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px"></div>
@@ -468,15 +469,12 @@ html{scroll-behavior:smooth}
   </div>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
   <div>우리 가족의 특별한 유럽 대모험을 위해 ❤️</div>
   <div style="margin-top:4px">로마 → 소렌토 → 피렌체 → 베네치아 → 인터라켄 → 파리 → 런던</div>
 </div>
 
-</div><!-- .wrap -->
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
   var map = L.map('europe-map', {
@@ -489,7 +487,7 @@ html{scroll-behavior:smooth}
     zoomControl: true
   });
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 19
   }).addTo(map);
