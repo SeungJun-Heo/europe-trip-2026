@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>유럽 가족 여행 가이드북 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAFAFA;color:#1F2937;-webkit-text-size-adjust:100%}
+a{color:#2563EB;text-decoration:none}
+.wrap{max-width:700px;margin:0 auto}
+
+/* Header */
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);padding:44px 20px 28px;color:#fff;text-align:center}
+.header .sub{font-size:11px;letter-spacing:3px;opacity:.65;margin-bottom:6px}
+.header h1{font-size:36px;font-weight:900;line-height:1.1;margin-bottom:4px}
+.header .info{font-size:13px;opacity:.75;margin-bottom:14px}
+.city-nav{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+.city-nav a{padding:4px 11px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;text-decoration:none;transition:opacity .2s}
+.city-nav a:active{opacity:.7}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 14px 0}
+.stat{text-align:center;background:#fff;border-radius:10px;padding:10px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat .n{font-size:22px;font-weight:800;color:#E74C3C}
+.stat .l{font-size:10px;color:#9CA3AF;margin-top:2px}
+
+/* Cards */
+.card{margin:12px 14px 0;border-radius:12px;padding:12px 16px;font-size:13px}
+.card-blue{background:#EFF6FF;border:1px solid #BFDBFE}
+.card-yellow{background:#FFFBEB;border:1px solid #F59E0B}
+.card-red{background:#FEF2F2;border:1px solid #FCA5A5}
+.card b{font-weight:700}
+.card .label{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+
+/* Bookings toggle */
+.bk-btn{width:calc(100% - 28px);margin:12px 14px 0;padding:10px 16px;background:#fff;border:1px solid #F59E0B;border-radius:10px;font-size:13px;font-weight:700;color:#92400E;cursor:pointer;font-family:inherit}
+.bk-btn:active{background:#FEF3C7}
+.bk-list{margin:0 14px;background:#FFFBEB;border:1px solid #F59E0B;border-top:none;border-radius:0 0 10px 10px;padding:6px 16px;display:none}
+.bk-list.open{display:block}
+.bk-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-top:1px solid #FDE68A}
+.bk-row:first-child{border-top:none}
+.bk-ref{font-family:monospace;font-weight:700;color:#DC2626}
+
+/* City Section */
+.city{margin:32px 0;padding:0 14px}
+.hero{position:relative;height:260px;border-radius:16px;overflow:hidden;margin-bottom:0}
+.hero img{width:100%;height:100%;object-fit:cover}
+.hero .overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.05) 55%)}
+.hero .txt{position:absolute;bottom:16px;left:20px;color:#fff}
+.hero .txt .co{font-size:12px;opacity:.8;letter-spacing:2px;font-weight:600}
+.hero .txt h2{font-size:32px;font-weight:900;line-height:1.1;margin:2px 0}
+.hero .txt h2 span{font-weight:400;font-size:20px;opacity:.75}
+.hero .txt .dt{font-size:13px;opacity:.85}
+.hero .badge{position:absolute;top:14px;right:14px;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;color:#fff}
+
+/* Accom */
+.accom{background:#FFFBEB;border:1px solid #F59E0B;border-radius:12px;padding:12px 16px;margin:14px 0}
+.accom .title{font-size:11px;color:#B45309;font-weight:700;letter-spacing:1px}
+.accom .name{font-size:15px;font-weight:700;color:#78350F;margin:2px 0}
+.accom .addr{font-size:12px;color:#92400E}
+.accom .meta{font-size:11px;color:#A16207;margin-top:2px}
+.accom .ref{font-family:monospace;font-weight:800;color:#DC2626;font-size:14px}
+.accom .map-link{font-size:11px;color:#2563EB}
+
+/* Tickets */
+.tickets{background:#FEF2F2;border:1px solid #FCA5A5;border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.tickets .title{font-size:12px;font-weight:700;color:#DC2626;letter-spacing:1px;margin-bottom:6px}
+.ticket-row{padding:5px 0;border-top:1px solid #FECACA;font-size:12px}
+.ticket-row:first-of-type{border-top:none}
+.ticket-row .tn{font-weight:700;font-size:13px}
+.ticket-row .td{color:#6B7280}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 15px;border-radius:20px;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .15s}
+.tab.active{color:#fff}
+.tab:not(.active){background:#F3F4F6;color:#374151}
+
+/* Attractions */
+.att-card{display:flex;gap:12px;background:#F9FAFB;border-radius:12px;overflow:hidden;border:1px solid #E5E7EB;margin-bottom:10px}
+.att-card img{width:120px;min-height:95px;object-fit:cover;flex-shrink:0}
+.att-card .info{padding:10px 12px 10px 0;flex:1;min-width:0}
+.att-card .info h4{font-size:14px;font-weight:700;margin-bottom:3px}
+.att-card .info p{font-size:12px;color:#6B7280;line-height:1.5}
+.att-card .info .ml{font-size:11px;color:#2563EB;margin-top:4px;display:inline-block}
+
+/* Schedule */
+.day{border-left:3px solid;padding-left:14px;margin-bottom:14px;padding-bottom:4px}
+.day .dt{font-weight:700;font-size:14px}
+.day ul{margin:6px 0 0;padding:0 0 0 16px}
+.day li{font-size:13px;color:#374151;margin-bottom:3px;line-height:1.5}
+
+/* Transport */
+.transport{background:#EFF6FF;border:1px solid #93C5FD;border-radius:10px;padding:12px 16px;margin-top:10px}
+.transport .title{font-weight:700;font-size:13px;color:#1D4ED8}
+.transport .detail{font-size:12px;color:#374151;margin-top:4px}
+.transport .total{font-size:12px;color:#6B7280;margin-top:2px}
+
+/* Food */
+.food-item{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border-radius:8px;margin-bottom:6px}
+.food-item:nth-child(odd){background:#FFF7ED}
+.food-item:nth-child(even){background:#FFFBEB}
+.food-item .emoji{font-size:18px;flex-shrink:0}
+.food-item .fn{font-weight:700;font-size:14px;color:#92400E}
+.food-item .fw{font-size:12px;color:#78350F}
+.food-item .ft{font-size:12px;color:#A16207;margin-top:2px}
+
+/* Photo spots */
+.photo-spot{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#FFFBEB;border-radius:8px;margin-bottom:6px;font-size:13px}
+
+/* Tips */
+.tips-box{background:#FEF2F2;border-radius:12px;padding:14px 16px}
+.tips-box .title{font-size:13px;font-weight:700;color:#DC2626;margin-bottom:8px}
+.tips-box .tip{font-size:13px;padding:4px 0;border-top:1px solid #FECACA;line-height:1.6}
+.tips-box .tip:first-of-type{border-top:none}
+
+/* Emergency */
+.emergency{margin:0 14px 24px;background:#FEF2F2;border-radius:14px;padding:18px;border:1px solid #FECACA}
+.emergency h3{font-size:16px;font-weight:800;color:#DC2626;margin-bottom:10px}
+.emergency .grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
+.emergency .extra{margin-top:10px;font-size:12px;border-top:1px solid #FECACA;padding-top:8px}
+
+/* Footer */
+.footer{text-align:center;padding:24px 14px 44px;color:#9CA3AF;font-size:12px}
+
+/* Tab content */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Smooth scroll */
+html{scroll-behavior:smooth}
+
+@media print{
+  .tabs,.city-nav,.bk-btn,.bk-list{display:none!important}
+  .tab-content{display:block!important}
+  .hero{height:180px;break-inside:avoid}
+  .city{break-before:page}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="sub">FAMILY TRAVEL GUIDEBOOK</div>
+  <h1>유럽 대모험</h1>
+  <div class="info">2026. 4. 29 — 5. 25 · 27일 · 7도시 · 5나라</div>
+  <div class="city-nav">
+    <a href="#rome" style="background:#C0392B">로마</a>
+    <a href="#sorrento" style="background:#E67E22">소렌토</a>
+    <a href="#florence" style="background:#8E44AD">피렌체</a>
+    <a href="#venice" style="background:#2980B9">베네치아</a>
+    <a href="#interlaken" style="background:#27AE60">인터라켄</a>
+    <a href="#paris" style="background:#2C3E50">파리</a>
+    <a href="#london" style="background:#E74C3C">런던</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="n">27</div><div class="l">일</div></div>
+  <div class="stat"><div class="n">7</div><div class="l">도시</div></div>
+  <div class="stat"><div class="n">2</div><div class="l">뮤지컬</div></div>
+  <div class="stat"><div class="n">26</div><div class="l">박</div></div>
+</div>
+
+
+<!-- EUROPE MAP -->
+<div style="margin:14px 14px 0;border-radius:14px;overflow:hidden;border:1px solid #ddd;background:#fff">
+  <div style="font-size:13px;font-weight:700;color:#1D4ED8;padding:12px 16px 8px;text-align:center;letter-spacing:1px">🗺️ 여행 루트</div>
+  <div id="europe-map" style="width:100%;height:320px"></div>
+  <div style="text-align:center;font-size:11px;color:#5D6D7E;padding:8px 16px 12px">인천 ✈ 로마 → 소렌토 → 피렌체 → 베네치아 → 인터라켄 → 파리 → 런던 ✈ 인천</div>
+</div>
+
+<!-- FLIGHTS -->
+<div class="card card-blue">
+  <div class="label" style="color:#1D4ED8">✈️ 항공편</div>
+  <div>출국: <b>KE931</b> 인천→로마(FCO) 4/29</div>
+  <div>귀국: <b>KE908</b> 런던(LHR)→인천 5/25 19:35</div>
+</div>
+
+<!-- BOOKINGS -->
+<button class="bk-btn" onclick="document.querySelector('.bk-list').classList.toggle('open');this.textContent=document.querySelector('.bk-list').classList.contains('open')?'▲ 예약번호 접기':'▼ 전체 예약번호 보기'">▼ 전체 예약번호 보기</button>
+<div class="bk-list">
+  <div class="bk-row"><span>로마 숙소</span><span class="bk-ref">HMMRBEHCNT</span></div>
+  <div class="bk-row"><span>소렌토 숙소</span><span class="bk-ref">5952152017</span></div>
+  <div class="bk-row"><span>피렌체 숙소</span><span class="bk-ref">5083989451</span></div>
+  <div class="bk-row"><span>베네치아 숙소</span><span class="bk-ref">6147616473</span></div>
+  <div class="bk-row"><span>인터라켄 숙소</span><span class="bk-ref">5828736305</span></div>
+  <div class="bk-row"><span>파리 숙소</span><span class="bk-ref">HM5QPNKCFD</span></div>
+  <div class="bk-row"><span>런던 숙소</span><span class="bk-ref">2Z5PS8VQ</span></div>
+  <div class="bk-row"><span>TGV 바젤→파리</span><span class="bk-ref">X8PGBS</span></div>
+  <div class="bk-row"><span>유로스타 파리→런던</span><span class="bk-ref">KFNFMJ</span></div>
+  <div class="bk-row"><span>출국 KE931</span><span class="bk-ref">ICN→FCO 4/29</span></div>
+  <div class="bk-row"><span>귀국 KE908</span><span class="bk-ref">LHR→ICN 5/25</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ROME -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="city" id="rome">
+  <div class="hero">
+    <img src="https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="로마" loading="lazy">
+    <div class="overlay"></div>
+    <div class="txt">
+      <div class="co">이탈리아</div>
+      <h2>로마 <span>Roma</span></h2>
+      <div class="dt">영원의 도시 · 4/29–5/3 · 4박</div>
+    </div>
+    <div class="badge" style="background:#C0392B">4박</div>
+  </div>
+  <div class="accom">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <div class="title">숙소</div>
+        <div class="name">Lovely Apt Behind Navona</div>
+        <div class="addr">나보나 광장 뒷골목, Centro Storico</div>
+        <div class="meta">체크인 15:00 / 체크아웃 10:00 · 나보나 도보 2분, 판테온 도보 5분</div>
+      </div>
+      <div style="text-align:right">
+        <div class="title">Booking</div>
+        <div class="ref">HMMRBEHCNT</div>
+        <a href="https://maps.google.com/?q=Piazza+Navona+Rome" target="_blank" class="map-link">📍 지도 보기</a>
+      </div>
+    </div>
+  </div>
+  <div class="tickets">
+    <div class="title">🎫 예약 확정 티켓</div>
+    <div class="ticket-row"><span class="tn">✓ 콜로세움 & 포로 로마노</span><br><span class="td">5/2 (금) 16:30 · 예약 완료 · QR코드 준비</span></div>
+    <div class="ticket-row"><span class="tn">✓ 바티칸 박물관 투어</span><br><span class="td">4/30 (수) 오전 · 투어 예약 · 가이드 투어, 시스티나 성당 포함</span></div>
+  </div>
+  <div class="tabs" data-city="rome">
+    <button class="tab active" style="background:#C0392B" onclick="switchTab('rome','att',this,'#C0392B')">관광지</button>
+    <button class="tab" onclick="switchTab('rome','sch',this,'#C0392B')">일정</button>
+    <button class="tab" onclick="switchTab('rome','food',this,'#C0392B')">맛집</button>
+    <button class="tab" onclick="switchTab('rome','photo',this,'#C0392B')">포토스팟</button>
+    <button class="tab" onclick="switchTab('rome','tips',this,'#C0392B')">팁</button>
+  </div>
+  <div id="rome-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>콜로세움 & 포로 로마노</h4><p>고대 로마의 상징. 검투사 경기장 + 로마시대 광장. 2-3시간 소요.</p><a class="ml" href="https://maps.google.com/?q=Colosseum+Rome" target="_blank">📍 Google Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/11826844/pexels-photo-11826844.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>바티칸 박물관 & 시스티나 성당</h4><p>미켈란젤로 천장화! 세계 최대 미술품 컬렉션. 투어 추천.</p><a class="ml" href="https://maps.google.com/?q=Vatican+Museums" target="_blank">📍 Google Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/4558685/pexels-photo-4558685.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>판테온</h4><p>2000년 역사의 건축 경이. 무료 입장. 오쿨루스(천장 구멍) 하이라이트.</p><a class="ml" href="https://maps.google.com/?q=Pantheon+Rome" target="_blank">📍 Google Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/2225442/pexels-photo-2225442.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>트레비 분수</h4><p>동전 던지기! 저녁 조명이 아름다움. 소매치기 주의.</p><a class="ml" href="https://maps.google.com/?q=Trevi+Fountain+Rome" target="_blank">📍 Google Maps</a></div></div>
+    </div>
+  <div id="rome-sch" class="tab-content">
+    <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">1일차 4/29(화) — 도착</div><ul><li>KE931편 FCO 저녁 도착 → 숙소 이동</li><li>나보나 광장 근처에서 가벼운 저녁식사</li><li>일찍 휴식 (시차 적응)</li></ul></div>
+    <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">2일차 4/30(수) — 바티칸</div><ul><li>오전: 바티칸 박물관 + 시스티나 성당 (투어 예약!)</li><li>성 베드로 대성당 & 쿠폴라 등반</li><li>점심: Pizzarium Bonci (바티칸 근처)</li><li>오후: 산탄젤로 성 또는 보르게세 공원</li></ul></div>
+    <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">3일차 5/1(목) — 시내 도보투어</div><ul><li>보르게세 공원 → 스페인 계단</li><li>트레비 분수 → 판테온</li><li>나보나 광장 주변 산책</li><li>저녁: 트라스테베레 저녁식사</li></ul></div>
+    <div class="day" style="border-color:#C0392B"><div class="dt" style="color:#C0392B">4일차 5/2(금) — 고대 로마</div><ul><li>오전: 캄포 데 피오리 시장 산책</li><li><b>16:30 콜로세움 입장 (예약 확정!)</b></li><li>포로 로마노 → 트라스테베레 저녁</li></ul></div>
+    <div class="transport"><div class="title">➡️ 5/3: 소렌토로 이동</div><div class="detail">테르미니→나폴리(Frecciarossa 1h10m), 나폴리에서 피자 점심, Circumvesuviana→소렌토(1h)</div><div class="total">총 약 3시간 (나폴리 점심 포함 반나절)</div></div>
+  </div>
+  <div id="rome-food" class="tab-content">
+    <div class="food-item"><span class="emoji">🍝</span><div><span class="fn">까르보나라</span> <span class="fw">Da Enzo al 29 (트라스테베레)</span><div class="ft">줄 서서 먹는 맛집</div></div></div>
+    <div class="food-item"><span class="emoji">🍕</span><div><span class="fn">피자</span> <span class="fw">Pizzarium Bonci (바티칸 근처)</span><div class="ft">무게 단위 판매, 다양한 토핑</div></div></div>
+    <div class="food-item"><span class="emoji">🍦</span><div><span class="fn">젤라또</span> <span class="fw">Fatamorgana</span><div class="ft">천연 재료, 여러 지점</div></div></div>
+    <div class="food-item"><span class="emoji">🍙</span><div><span class="fn">수플리</span> <span class="fw">Supplizio</span><div class="ft">로마식 튀긴 주먹밥</div></div></div>
+    <div class="food-item"><span class="emoji">🍰</span><div><span class="fn">티라미수</span> <span class="fw">Pompi (Via della Croce)</span><div class="ft">로마 최고 티라미수</div></div></div>
+  </div>
+  <div id="rome-photo" class="tab-content">
+    <div class="photo-spot" style="border-left:3px solid #C0392B">📸 콜로세움 2층 아치에서 내부 파노라마</div>
+    <div class="photo-spot" style="border-left:3px solid #C0392B">📸 성 베드로 쿠폴라 꼭대기 (360도 로마 전경)</div>
+    <div class="photo-spot" style="border-left:3px solid #C0392B">📸 나보나 광장 분수 앞 가족사진</div>
+    <div class="photo-spot" style="border-left:3px solid #C0392B">📸 트레비 분수 동전 던지는 순간</div>
+    <div class="photo-spot" style="border-left:3px solid #C0392B">📸 카피톨리노 언덕 석양 (포로 로마노 뷰)</div>
+    
+  </div>
+  <div id="rome-tips" class="tab-content">
+    <div class="tips-box"><div class="title">⚠️ 여행 팁 & 주의사항</div>
+      <div class="tip">• Roma Pass (48/72hr): 교통 무료 + 박물관 할인</div>
+      <div class="tip">• 성당 입장: 어깨·무릎 가리기 필수 (스카프 지참)</div>
+      <div class="tip">• 테르미니역·콜로세움 주변 소매치기 매우 주의!</div>
+      <div class="tip">• 거리 분수(nasoni)에서 식수 보충 가능 — 물병 지참</div>
+      <div class="tip">• coperto(자리값) 1-3유로 별도 청구됨</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SORRENTO ═══ -->
+<div class="city" id="sorrento">
+  <div class="hero"><img src="https://images.pexels.com/photos/18771862/pexels-photo-18771862.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="소렌토" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>소렌토 <span>Sorrento</span></h2><div class="dt">아말피 해안의 관문 · 5/3–6 · 3박</div></div><div class="badge" style="background:#E67E22">3박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Casa Dominova de Luxe</div><div class="addr">소렌토 중심가, Corso Italia</div><div class="meta">체크인 14:00 / 체크아웃 10:00 · 구시가지 도보 5분</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5952152017</div><a href="https://maps.google.com/?q=Sorrento+Italy" target="_blank" class="map-link">📍 지도 보기</a></div></div></div>
+  <div class="tabs"><button class="tab active" style="background:#E67E22" onclick="switchTab('sorrento','att',this,'#E67E22')">관광지</button><button class="tab" onclick="switchTab('sorrento','sch',this,'#E67E22')">일정</button><button class="tab" onclick="switchTab('sorrento','food',this,'#E67E22')">맛집</button><button class="tab" onclick="switchTab('sorrento','photo',this,'#E67E22')">포토스팟</button><button class="tab" onclick="switchTab('sorrento','tips',this,'#E67E22')">팁</button></div>
+  <div id="sorrento-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/15396712/pexels-photo-15396712.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>폼페이 유적지</h4><p>베수비오 화산에 묻힌 고대 도시. 반나절 소요. 오디오가이드 추천.</p><a class="ml" href="https://maps.google.com/?q=Pompeii+Archaeological+Park" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/18771862/pexels-photo-18771862.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>카프리 섬 & 파란 동굴</h4><p>페리 25분. 파란 동굴은 해상 상태에 따라 입장 불가 가능.</p><a class="ml" href="https://maps.google.com/?q=Blue+Grotto+Capri" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/4577405/pexels-photo-4577405.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>아말피 해안 드라이브</h4><p>포지타노, 아말피, 라벨로 — 세계에서 가장 아름다운 해안도로!</p><a class="ml" href="https://maps.google.com/?q=Positano+Italy" target="_blank">📍 Maps</a></div></div>
+  </div>
+  <div id="sorrento-sch" class="tab-content">
+    <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">5일차 5/3(토) — 이동&탐방</div><ul><li>로마→나폴리(Frecciarossa) → 나폴리 피자 점심!</li><li>Circumvesuviana로 소렌토 도착, 체크인</li><li>구시가지 산책, 마리나 그란데 석양</li></ul></div>
+    <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">6일차 5/4(일) — 아말피 해안</div><ul><li>포지타노 → 아말피 해안 드라이브 (SITA 버스 or 페리)</li><li>포지타노 절벽 전망 + 해변</li><li>아말피 마을 & 대성당</li></ul></div>
+    <div class="day" style="border-color:#E67E22"><div class="dt" style="color:#E67E22">7일차 5/5(월) — 카프리 섬</div><ul><li>카프리 섬 페리 (소렌토 항구에서 약 25분)</li><li>파란 동굴 (해상상태 확인 필수!)</li><li>아우구스투스 정원, 카프리 마을 산책</li></ul></div>
+    <div class="transport"><div class="title">➡️ 5/6: 피렌체로 이동</div><div class="detail">Circumvesuviana→나폴리 중앙역, Frecciarossa→피렌체 SMN</div><div class="total">총 약 4시간</div></div>
+  </div>
+  <div id="sorrento-food" class="tab-content"><div class="food-item"><span class="emoji">🦐</span><div><span class="fn">해산물</span> <span class="fw">Bagni Delfino</span><div class="ft">마리나 그란데 바다 바로 앞</div></div></div><div class="food-item"><span class="emoji">🍕</span><div><span class="fn">피자 나폴레타나</span><div class="ft">나폴리 근처 = 최고의 피자!</div></div></div><div class="food-item"><span class="emoji">🍋</span><div><span class="fn">리몬첼로</span> <span class="fw">레몬 농장</span><div class="ft">시음+견학 체험</div></div></div></div>
+  <div id="sorrento-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #E67E22">📸 마리나 그란데 — 파란 보트들 배경</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 포지타노 절벽 전망대 — 아말피 대표 풍경</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 빌라 코무날레 정원 석양</div><div class="photo-spot" style="border-left:3px solid #E67E22">📸 파란 동굴 내부 (방수케이스!)</div></div>
+  <div id="sorrento-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• Circumvesuviana 승차권 탑승 전 구매</div><div class="tip">• 폼페이: 물·선크림 필수, 그늘 적음</div><div class="tip">• 아말피 해안 버스: 멀미약 준비</div></div></div>
+</div>
+
+<!-- ═══ FLORENCE ═══ -->
+<div class="city" id="florence">
+  <div class="hero"><img src="https://images.pexels.com/photos/31357719/pexels-photo-31357719.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="피렌체" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>피렌체 <span>Firenze</span></h2><div class="dt">르네상스의 심장 · 5/6–9 · 3박</div></div><div class="badge" style="background:#8E44AD">3박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">7Florence B&B</div><div class="addr">피렌체 중심가, 두오모 도보 10분 이내</div><div class="meta">체크인 14:00 / 체크아웃 10:30</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5083989451</div><a href="https://maps.google.com/?q=Florence+Duomo" target="_blank" class="map-link">📍 지도</a></div></div></div>
+  <div class="tabs"><button class="tab active" style="background:#8E44AD" onclick="switchTab('florence','att',this,'#8E44AD')">관광지</button><button class="tab" onclick="switchTab('florence','sch',this,'#8E44AD')">일정</button><button class="tab" onclick="switchTab('florence','food',this,'#8E44AD')">맛집</button><button class="tab" onclick="switchTab('florence','photo',this,'#8E44AD')">포토스팟</button><button class="tab" onclick="switchTab('florence','tips',this,'#8E44AD')">팁</button></div>
+  <div id="florence-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/15595693/pexels-photo-15595693.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>두오모 & 돔 클라임</h4><p>463계단 — 피렌체 360도 파노라마! 예약 필수.</p><a class="ml" href="https://maps.google.com/?q=Florence+Cathedral" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/27294395/pexels-photo-27294395.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>우피치 미술관</h4><p>보티첼리 '비너스의 탄생', 다빈치, 카라바조. 온라인 예매!</p><a class="ml" href="https://maps.google.com/?q=Uffizi+Gallery" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/14328440/pexels-photo-14328440.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>미켈란젤로 광장</h4><p>피렌체 전경 석양 명소 #1! 무료.</p><a class="ml" href="https://maps.google.com/?q=Piazzale+Michelangelo" target="_blank">📍 Maps</a></div></div>
+  </div>
+  <div id="florence-sch" class="tab-content">
+    <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">8일차 5/6(화) — 도착</div><ul><li>나폴리 경유 피렌체 도착 (da Michele 점심)</li><li>두오모 광장 산책, 세례당</li><li>저녁: Trattoria Dall'Oste</li></ul></div>
+    <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">9일차 5/7(수) — 미술관 & 석양</div><ul><li>오전: 우피치 미술관</li><li>베키오 다리 산책</li><li>미켈란젤로 광장 석양 (피렌체 최고 뷰!)</li></ul></div>
+    <div class="day" style="border-color:#8E44AD"><div class="dt" style="color:#8E44AD">10일차 5/8(목) — 피사 당일치기</div><ul><li>피사의 사탑 방문 (기차 약 1시간)</li><li>광장에서 기울어진 사진 찍기!</li><li>피렌체 복귀 후 마지막 저녁</li></ul></div>
+    <div class="transport"><div class="title">➡️ 5/9: 베네치아로 이동</div><div class="detail">Frecciarossa 피렌체 SMN→베네치아 산타 루치아</div><div class="total">약 2시간</div></div>
+  </div>
+  <div id="florence-food" class="tab-content"><div class="food-item"><span class="emoji">🥩</span><div><span class="fn">비스테카 피오렌티나</span> <span class="fw">Trattoria Mario</span><div class="ft">T본 스테이크 무게 단위 주문</div></div></div><div class="food-item"><span class="emoji">🥖</span><div><span class="fn">람프레도토</span> <span class="fw">All'Antico Vinaio</span><div class="ft">피렌체 대표 길거리 음식</div></div></div><div class="food-item"><span class="emoji">🍦</span><div><span class="fn">젤라또</span> <span class="fw">Vivoli / La Carraia</span><div class="ft">피렌체 최고</div></div></div></div>
+  <div id="florence-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 미켈란젤로 광장 석양 (일몰 30분 전!)</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 두오모 돔 꼭대기 파노라마</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 베키오 다리 위 아르노강 배경</div><div class="photo-spot" style="border-left:3px solid #8E44AD">📸 두오모 정면 가족사진</div></div>
+  <div id="florence-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 우피치·아카데미아: 온라인 예매 필수!</div><div class="tip">• 돔 클라임: 사전 예약 (463계단, 엘베 없음)</div><div class="tip">• 산 로렌초 시장: 가죽 흥정 가능</div></div></div>
+</div>
+
+<!-- ═══ VENICE ═══ -->
+<div class="city" id="venice">
+  <div class="hero"><img src="https://images.pexels.com/photos/797724/pexels-photo-797724.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="베네치아" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">이탈리아</div><h2>베네치아 <span>Venezia</span></h2><div class="dt">운하의 도시 · 5/9–11 · 2박</div></div><div class="badge" style="background:#2980B9">2박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Ca' Rielo</div><div class="addr">베네치아 본섬</div><div class="meta">체크인 14:00 / 체크아웃 10:00 · 바포레토 접근</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">6147616473</div><a href="https://maps.google.com/?q=Venice+Italy" target="_blank" class="map-link">📍 지도</a></div></div></div>
+  <div class="tabs"><button class="tab active" style="background:#2980B9" onclick="switchTab('venice','att',this,'#2980B9')">관광지</button><button class="tab" onclick="switchTab('venice','sch',this,'#2980B9')">일정</button><button class="tab" onclick="switchTab('venice','food',this,'#2980B9')">맛집</button><button class="tab" onclick="switchTab('venice','photo',this,'#2980B9')">포토스팟</button><button class="tab" onclick="switchTab('venice','tips',this,'#2980B9')">팁</button></div>
+  <div id="venice-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/4094266/pexels-photo-4094266.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>곤돌라</h4><p>약 80유로/30분. 좁은 운하 코스가 더 운치있음.</p><a class="ml" href="https://maps.google.com/?q=Grand+Canal+Venice" target="_blank">📍 Maps</a></div></div>
+    </div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/33590724/pexels-photo-33590724.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>산 마르코 광장 & 두칼레 궁전</h4><p>비잔틴 모자이크 대성당, 종탑(엘리베이터), 도제의 궁전. 탄식의 다리.</p><a class="ml" href="https://maps.google.com/?q=St+Mark+Square+Venice" target="_blank">📍 Maps</a></div></div>
+    
+  <div id="venice-sch" class="tab-content">
+    <div class="day" style="border-color:#2980B9"><div class="dt" style="color:#2980B9">11일차 5/9(토) — 도착 & 카나레조</div><ul><li>피렌체→베네치아 산타 루치아 (Frecciarossa)</li><li>바포레토로 숙소 이동 (패스 구매!)</li><li>카나레조 지구 산책 → 리알토 다리</li><li>치케티 투어 (바카리 3-4곳)</li></ul></div>
+    <div class="day" style="border-color:#2980B9"><div class="dt" style="color:#2980B9">12일차 5/10(일) — 산마르코 & 곤돌라</div><ul><li>산마르코 광장 & 대성당</li><li>두칼레 궁전 (도제의 궁전)</li><li>Libreria Acqua Alta (물에 잠기는 서점!)</li><li>곤돌라 탑승 (석양 코스 추천)</li></ul></div>
+    <div class="transport"><div class="title">➡️ 5/11: 인터라켄으로 이동 (다구간)</div><div class="detail">07:18 Frecciarossa 베네치아→밀라노, 10:10 EC→키아소, 14:06 루체른→인터라켄</div><div class="total">약 7시간 (스위스 알프스 경치!)</div></div>
+  </div>
+  <div id="venice-food" class="tab-content"><div class="food-item"><span class="emoji">🍷</span><div><span class="fn">치케티</span> <span class="fw">바카리(와인바)</span><div class="ft">타파스처럼 1개 1-3유로</div></div></div><div class="food-item"><span class="emoji">🍹</span><div><span class="fn">스프리츠</span> <span class="fw">운하변 바</span><div class="ft">아페롤 스프리츠 한 잔!</div></div></div></div>
+  <div id="venice-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #2980B9">📸 리알토 다리 위 — 대운하 뷰</div><div class="photo-spot" style="border-left:3px solid #2980B9">📸 산마르코 광장 종탑 꼭대기 전경</div><div class="photo-spot" style="border-left:3px solid #2980B9">📸 곤돌라 좁은 운하 통과 시</div></div>
+  <div id="venice-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 바포레토 패스: 24hr €25 / 48hr €35 / 72hr €45</div><div class="tip">• 100% 도보 도시 — 편한 신발 필수</div><div class="tip">• 골목은 진짜 미로 — 구글맵 필수!</div></div></div>
+</div>
+
+<!-- ═══ INTERLAKEN ═══ -->
+<div class="city" id="interlaken">
+  <div class="hero"><img src="https://images.pexels.com/photos/14699769/pexels-photo-14699769.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="인터라켄" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">스위스</div><h2>인터라켄 <span>Interlaken</span></h2><div class="dt">알프스의 낙원 · 5/11–15 · 4박</div></div><div class="badge" style="background:#27AE60">4박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Holzhaus by Interlaken</div><div class="addr">인터라켄 지역, 알프스 전망 목조주택</div><div class="meta">체크인 15:00 / 체크아웃 10:00</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">5828736305</div><a href="https://maps.google.com/?q=Interlaken+Switzerland" target="_blank" class="map-link">📍 지도</a></div></div></div>
+  <div class="tabs"><button class="tab active" style="background:#27AE60" onclick="switchTab('interlaken','att',this,'#27AE60')">관광지</button><button class="tab" onclick="switchTab('interlaken','sch',this,'#27AE60')">일정</button><button class="tab" onclick="switchTab('interlaken','food',this,'#27AE60')">맛집</button><button class="tab" onclick="switchTab('interlaken','photo',this,'#27AE60')">포토스팟</button><button class="tab" onclick="switchTab('interlaken','tips',this,'#27AE60')">팁</button></div>
+  <div id="interlaken-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/2774415/pexels-photo-2774415.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>융프라우요흐 (Top of Europe)</h4><p>해발 3,454m 유럽의 지붕! 얼음궁전·스핑크스 전망대·알레치 빙하. <b>5/12 방문</b>. ~CHF200/인.</p><a class="ml" href="https://maps.google.com/?q=Jungfraujoch" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/13818274/pexels-photo-13818274.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>하더 쿨름 (Harder Kulm)</h4><p>인터라켄 위 전망대. 툰 호수·브리엔츠 호수 파노라마! <b>5/12 저녁</b>. 퍼니쿨라 10분.</p><a class="ml" href="https://maps.google.com/?q=Harder+Kulm+Interlaken" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/13612696/pexels-photo-13612696.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>그린델발트 피르스트 (First)</h4><p>절벽 산책로(Cliff Walk) + 피르스트 플라이어 짚라인. <b>5/13 방문</b>. 곤돌라로 이동.</p><a class="ml" href="https://maps.google.com/?q=Grindelwald+First" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/30779923/pexels-photo-30779923.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>브리엔츠 & 발렌베르크</h4><p>에메랄드빛 브리엔츠 호수 마을. 로트호른반 증기기관차·발렌베르크 야외박물관. <b>5/14 방문</b>.</p><a class="ml" href="https://maps.google.com/?q=Brienz+Switzerland" target="_blank">📍 Maps</a></div></div>
+  </div>
+  <div id="interlaken-sch" class="tab-content">
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">13일차 5/11(일) — 도착</div><ul><li>베네치아→밀라노→키아소→루체른→인터라켄 (다구간)</li><li>Holzhaus 체크인, 아레강 산책</li><li>일찍 저녁 & 휴식 (긴 이동일)</li></ul></div>
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">14일차 5/12(월) — 하더 쿨름 & 융프라우</div><ul><li>이른 출발! 융프라우요흐 열차 (Top of Europe)</li><li>얼음궁전, 스핑크스 전망대, 알레치빙하</li><li>고산병 주의 — 천천히, 물 충분히</li><li>하산 후 하더 쿨름 전망대 (저녁 석양 추천)</li></ul></div>
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">15일차 5/13(수) — 피르스트 (First)</div><ul><li>그린델발트 피르스트 곤돌라</li><li>절벽 산책로 (Cliff Walk) — 알프스 파노라마!</li><li>피르스트 플라이어 (짚라인) 도전?</li><li>그린델발트 마을에서 점심</li></ul></div>
+    <div class="day" style="border-color:#27AE60"><div class="dt" style="color:#27AE60">16일차 5/14(목) — 브리엔츠</div><ul><li>브리엔츠 마을 방문</li><li>증기기관차 체험, 발렌베르크 야외박물관</li><li>브리엔츠 호수 유람</li><li>스위스 마지막 저녁</li></ul></div>
+    <div class="transport"><div class="title">➡️ 다음: 파리</div><div class="detail">인터라켄→바젤, 14:34 TGV Lyria 바젤→파리 리옹역 (X8PGBS)</div><div class="total">약 5시간</div></div>
+  </div>
+  <div id="interlaken-food" class="tab-content"><div class="food-item"><span class="emoji">🧀</span><div><span class="fn">퐁뒤</span><div class="ft">스위스 필수 체험! 그뤼에르+에멘탈 치즈</div></div></div><div class="food-item"><span class="emoji">🥔</span><div><span class="fn">라클렛 & 뢰스티</span><div class="ft">녹인 치즈+감자 / 스위스 해시브라운</div></div></div><div class="food-item"><span class="emoji">🏪</span><div><span class="fn">쿱/미그로 슈퍼마켓</span><div class="ft">가성비 식사의 구원자!</div></div></div></div>
+  <div id="interlaken-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #27AE60">📸 융프라우요흐 스핑크스 전망대 — 만년설 배경</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 하더 쿨름 — 두 호수 파노라마</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 그린델발트 피르스트 절벽 산책로 (Cliff Walk)</div><div class="photo-spot" style="border-left:3px solid #27AE60">📸 브리엔츠 호수 에메랄드빛</div></div>
+  <div id="interlaken-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 융프라우: 맑은 날! jungfrau.ch 웹캠 확인</div><div class="tip">• 물가 매우 비쌈 — 쿱/미그로 적극 활용</div><div class="tip">• 5월 산 위는 춥고 눈 — 레이어링 필수</div><div class="tip">• 스위스프랑(CHF) 필요!</div></div></div>
+</div>
+
+<!-- ═══ PARIS ═══ -->
+<div class="city" id="paris">
+  <div class="hero"><img src="https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="파리" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">프랑스</div><h2>파리 <span>Paris</span></h2><div class="dt">빛의 도시 · 5/15–20 · 5박</div></div><div class="badge" style="background:#2C3E50">5박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">30 Avenue de Suffren</div><div class="addr">7구, 에펠탑 도보 10분</div><div class="meta">체크인 16:00 / 체크아웃 11:00 · 샹 드 마르스 공원 옆</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">HM5QPNKCFD</div><a href="https://maps.google.com/?q=30+Avenue+de+Suffren+Paris" target="_blank" class="map-link">📍 지도</a></div></div></div>
+  <div class="tickets"><div class="title">🎫 예약 확정 티켓</div><div class="ticket-row"><span class="tn">✓ 베르사유 궁전</span><br><span class="td">5/16 (금) · 예약 완료 · 전체 입장</span></div><div class="ticket-row"><span class="tn">✓ 루브르 박물관</span><br><span class="td">5/18 (일) 14:00~16:00 · 투어 예약 · 가이드 투어</span></div></div>
+  <div class="tabs"><button class="tab active" style="background:#2C3E50" onclick="switchTab('paris','att',this,'#2C3E50')">관광지</button><button class="tab" onclick="switchTab('paris','sch',this,'#2C3E50')">일정</button><button class="tab" onclick="switchTab('paris','food',this,'#2C3E50')">맛집</button><button class="tab" onclick="switchTab('paris','photo',this,'#2C3E50')">포토스팟</button><button class="tab" onclick="switchTab('paris','tips',this,'#2C3E50')">팁</button></div>
+  <div id="paris-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/1446624/pexels-photo-1446624.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>에펠탑</h4><p>숙소 도보 10분! 트로카데로에서 감상. 야간 정각마다 5분 반짝임!</p><a class="ml" href="https://maps.google.com/?q=Eiffel+Tower" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/16496467/pexels-photo-16496467.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>루브르 박물관</h4><p>모나리자, 밀로의 비너스, 승리의 여신. 투어 2-3시간.</p><a class="ml" href="https://maps.google.com/?q=Louvre+Museum" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/13678694/pexels-photo-13678694.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>베르사유 궁전</h4><p>거울의 방, 대정원, 트리아농. RER C로 40분.</p><a class="ml" href="https://maps.google.com/?q=Palace+of+Versailles" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/28751796/pexels-photo-28751796.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>파리 디즈니랜드</h4><p>잠자는 숲속의 공주 성! 아이들 꿈의 나라. 파리에서 RER A로 40분.</p><a class="ml" href="https://maps.google.com/?q=Disneyland+Paris" target="_blank">📍 Google Maps</a></div></div>
+  </div>
+  <div id="paris-sch" class="tab-content">
+    <div class="day" style="border-color:#2C3E50"><div class="dt" style="color:#2C3E50">17일차 5/15(목) — 도착 & 에펠탑</div><ul><li>TGV Lyria: 바젤→파리 리옹역 (14:34→17:38)</li><li>숙소 체크인 (에펠탑 도보 10분!)</li><li>저녁: 에펠탑 외부 감상 + 트로카데로 야경</li></ul></div>
+    <div class="day" style="border-color:#2C3E50"><div class="dt" style="color:#2C3E50">18일차 5/16(금) — 베르사유</div><ul><li>RER C로 베르사유 궁전 방문</li><li>거울의 방, 대정원, 트리아농</li><li>파리 복귀 후 여유로운 저녁</li></ul></div>
+    <div class="day" style="border-color:#2C3E50"><div class="dt" style="color:#2C3E50">19일차 5/17(토) — 오르세 & 과학관</div><ul><li>오전: 오르세 미술관 (인상파 명작)</li><li>오후: Cité des Sciences (과학 산업 박물관) — 아이들!</li><li>라빌레트 공원 산책</li></ul></div>
+    <div class="day" style="border-color:#2C3E50"><div class="dt" style="color:#2C3E50">20일차 5/18(일) — 노트르담 & 루브르</div><ul><li>오전: 노트르담 대성당 주변 (시테 섬)</li><li><b>14:00~16:00 루브르 박물관 투어 (예약 완료!)</b></li><li>모나리자, 밀로의 비너스, 승리의 여신</li></ul></div>
+    <div class="day" style="border-color:#2C3E50"><div class="dt" style="color:#2C3E50">21일차 5/19(화) — 디즈니랜드!</div><ul><li><b>디즈니랜드 파리 (12:30~22:30)</b></li><li>RER A로 이동 (약 40분)</li><li>잠자는 숲속의 공주 성, 퍼레이드, 불꽃놀이!</li><li>아이들 최고의 하루!</li></ul></div>
+    <div class="transport"><div class="title">➡️ 다음: 런던</div><div class="detail">12:02 유로스타: 파리 북역→런던 (KFNFMJ)</div><div class="total">약 2.5시간 (도착 ~13:00, 시차 -1h)</div></div>
+  </div>
+  <div id="paris-food" class="tab-content"><div class="food-item"><span class="emoji">🥐</span><div><span class="fn">크루아상</span> <span class="fw">동네 불랑제리</span><div class="ft">매일 아침!</div></div></div><div class="food-item"><span class="emoji">🧁</span><div><span class="fn">마카롱</span> <span class="fw">Laduree / Pierre Herme</span><div class="ft">선물용으로도 좋음</div></div></div><div class="food-item"><span class="emoji">🧆</span><div><span class="fn">팔라펠</span> <span class="fw">L'As du Fallafel (르 마레)</span><div class="ft">줄 서서 먹는 맛집</div></div></div><div class="food-item"><span class="emoji">🧺</span><div><span class="fn">센강 피크닉</span> <span class="fw">슈퍼에서 장보기</span><div class="ft">바게트+치즈+와인!</div></div></div></div>
+  <div id="paris-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #2C3E50">📸 트로카데로 — 에펠탑 정면 (최고!)</div><div class="photo-spot" style="border-left:3px solid #2C3E50">📸 루브르 피라미드 앞 야간</div><div class="photo-spot" style="border-left:3px solid #2C3E50">📸 디즈니랜드 잠자는 숲속의 공주 성 앞</div><div class="photo-spot" style="border-left:3px solid #2C3E50">📸 센강 유람선 에펠탑 반짝임</div><div class="photo-spot" style="border-left:3px solid #2C3E50">📸 알렉상드르 3세 다리</div></div>
+  <div id="paris-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 뮤지엄 패스: 60개+ 박물관 무료입장</div><div class="tip">• 에펠탑 주변 사기꾼 주의! 디즈니랜드는 하루 종일 잡기</div><div class="tip">• 야간 에펠탑 반짝임: 매시 정각 5분</div><div class="tip">• 베르사유: 화요일 휴관!</div></div></div>
+</div>
+
+<!-- ═══ LONDON ═══ -->
+<div class="city" id="london">
+  <div class="hero"><img src="https://images.pexels.com/photos/30624831/pexels-photo-30624831.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="런던" loading="lazy"><div class="overlay"></div><div class="txt"><div class="co">영국</div><h2>런던 <span>London</span></h2><div class="dt">왕실의 수도 · 5/20–25 · 5박</div></div><div class="badge" style="background:#E74C3C">5박</div></div>
+  <div class="accom"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><div><div class="title">숙소</div><div class="name">Park Plaza County Hall</div><div class="addr">South Bank — 런던아이 도보 2분, 빅벤 도보 5분!</div><div class="meta">체크인 15:00 / 체크아웃 12:00</div></div><div style="text-align:right"><div class="title">Booking</div><div class="ref">2Z5PS8VQ</div><a href="https://maps.google.com/?q=Park+Plaza+County+Hall+London" target="_blank" class="map-link">📍 지도</a></div></div></div>
+  <div class="tickets"><div class="title">🎫 예약 확정 티켓</div>
+    <div class="ticket-row"><span class="tn">✓ 라이온 킹 뮤지컬</span><br><span class="td">5/20 (수) 저녁 · Lyceum Theatre</span></div>
+    <div class="ticket-row"><span class="tn">✓ 해리포터 스튜디오 투어</span><br><span class="td">5/21 (목) · Warner Bros. Leavesden</span></div>
+    <div class="ticket-row"><span class="tn">✓ 오페라의 유령</span><br><span class="td">5/22 (금) 19:30 · His Majesty's Theatre · <b>Stalls J12-15</b></span></div>
+  </div>
+  <div class="tabs"><button class="tab active" style="background:#E74C3C" onclick="switchTab('london','att',this,'#E74C3C')">관광지</button><button class="tab" onclick="switchTab('london','sch',this,'#E74C3C')">일정</button><button class="tab" onclick="switchTab('london','food',this,'#E74C3C')">맛집</button><button class="tab" onclick="switchTab('london','photo',this,'#E74C3C')">포토스팟</button><button class="tab" onclick="switchTab('london','tips',this,'#E74C3C')">팁</button></div>
+  <div id="london-att" class="tab-content active">
+    <div class="att-card"><img src="https://images.pexels.com/photos/5432843/pexels-photo-5432843.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>해리포터 스튜디오 투어</h4><p>실제 세트·소품·의상. 3-4시간. 버터비어!</p><a class="ml" href="https://maps.google.com/?q=Warner+Bros+Studio+Tour+London" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/2846155/pexels-photo-2846155.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>대영박물관</h4><p>로제타석, 이집트 미라. 무료! 2-3시간.</p><a class="ml" href="https://maps.google.com/?q=British+Museum+London" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>런던탑 & 왕관 보석</h4><p>천년 역사 요새. 크라운 주얼스 필수! ~£35/인.</p><a class="ml" href="https://maps.google.com/?q=Tower+of+London" target="_blank">📍 Maps</a></div></div>
+    <div class="att-card"><img src="https://images.pexels.com/photos/16230750/pexels-photo-16230750.jpeg?auto=compress&cs=tinysrgb&w=800" loading="lazy"><div class="info"><h4>자연사박물관</h4><p>공룡! 아이들 최고 인기. 무료 입장.</p><a class="ml" href="https://maps.google.com/?q=Natural+History+Museum+London" target="_blank">📍 Maps</a></div></div>
+  </div>
+  <div id="london-sch" class="tab-content">
+    <div class="day" style="border-color:#E74C3C"><div class="dt" style="color:#E74C3C">22일차 5/20(수) — 도착 & 🎭라이온 킹</div><ul><li>12:02 유로스타 파리→런던 (~13:00 도착)</li><li>Park Plaza County Hall 체크인</li><li>웨스트민스터 다리 산책, 빅벤 감상</li><li><b>저녁: 라이온 킹 뮤지컬 (Lyceum Theatre)</b></li></ul></div>
+    <div class="day" style="border-color:#E74C3C"><div class="dt" style="color:#E74C3C">23일차 5/21(목) — 해리포터 스튜디오</div><ul><li><b>Warner Bros. 해리포터 스튜디오 (Leavesden)</b></li><li>유스턴→Watford Junction→셔틀버스</li><li>호그와트 대연회장, 다이애건 앨리, 호그와트 모형</li><li>버터비어 & 기프트숍 (3-4시간!)</li></ul></div>
+    <div class="day" style="border-color:#E74C3C"><div class="dt" style="color:#E74C3C">24일차 5/22(금) — 왕실 & 🎭오페라의 유령</div><ul><li>버킹엄 궁전 — 근위병 교대식</li><li>자연사박물관 (공룡! 무료, 아이들 최고)</li><li>호텔 복귀, 정장 차림으로 준비</li><li><b>19:30 오페라의 유령 (His Majesty's, Stalls J12-15)</b></li></ul></div>
+    <div class="day" style="border-color:#E74C3C"><div class="dt" style="color:#E74C3C">25일차 5/23(토) — 런던탑 & 타워브리지</div><ul><li>런던탑 & 크라운 주얼스 (왕관 보석)</li><li>타워 브리지 보행자 통로</li><li>버러 마켓 점심 (세계 음식!)</li><li>사우스뱅크 야경 산책</li></ul></div>
+    <div class="day" style="border-color:#E74C3C"><div class="dt" style="color:#E74C3C">26일차 5/24(일) — 코벤트 가든</div><ul><li>코벤트 가든 거리 공연</li><li>대영박물관 or 쇼핑</li><li>애프터눈 티 체험!</li><li>마지막 기념품 & 짐 정리</li></ul></div>
+    <div class="card card-red" style="margin:10px 0"><div class="label" style="color:#DC2626">✈️ 귀국 — 5/25 (월)</div><div><b>KE908</b> 런던 히드로(LHR) → 인천 · 출발 19:35</div><div style="font-size:12px;color:#6B7280">히드로 익스프레스 15분 or 피카딜리선 1시간 · 3시간 전 공항 도착</div></div>
+  </div>
+  <div id="london-food" class="tab-content"><div class="food-item"><span class="emoji">🐟</span><div><span class="fn">피시 앤 칩스</span> <span class="fw">The Golden Hind</span><div class="ft">현지인 맛집</div></div></div><div class="food-item"><span class="emoji">☕</span><div><span class="fn">애프터눈 티</span> <span class="fw">Fortnum & Mason</span><div class="ft">특별 체험! 사전 예약</div></div></div><div class="food-item"><span class="emoji">🍖</span><div><span class="fn">선데이 로스트</span> <span class="fw">정통 펍</span><div class="ft">로스트비프+요크셔푸딩</div></div></div><div class="food-item"><span class="emoji">🌍</span><div><span class="fn">버러 마켓</span> <span class="fw">London Bridge 근처</span><div class="ft">세계 음식 마켓!</div></div></div></div>
+  <div id="london-photo" class="tab-content"><div class="photo-spot" style="border-left:3px solid #E74C3C">📸 빅벤 — 웨스트민스터 다리 위에서</div><div class="photo-spot" style="border-left:3px solid #E74C3C">📸 타워 브리지 남쪽</div><div class="photo-spot" style="border-left:3px solid #E74C3C">📸 해리포터 호그와트 대연회장</div><div class="photo-spot" style="border-left:3px solid #E74C3C">📸 버킹엄 궁전 근위병 교대식</div><div class="photo-spot" style="border-left:3px solid #E74C3C">📸 사우스뱅크 야경 (빅벤+런던아이)</div></div>
+  <div id="london-tips" class="tab-content"><div class="tips-box"><div class="title">⚠️ 팁</div><div class="tip">• 오이스터/컨택리스: daily cap 자동 적용</div><div class="tip">• 주요 박물관 무료! (대영, 자연사, V&A)</div><div class="tip">• UK ETA 4인 완료 확인</div><div class="tip">• 좌측통행! 오른쪽 먼저 확인</div><div class="tip">• 근위병 교대: 월·수·금·일 11:00 (비오면 취소)</div></div></div>
+</div>
+
+
+<!-- MUSICALS -->
+<div style="margin:0 14px 24px;background:#FFF7ED;border-radius:14px;padding:18px;border:1px solid #FDBA74">
+  <h3 style="font-size:16px;font-weight:800;color:#C2410C;margin:0 0 12px">🎭 뮤지컬 & 공연 일정</h3>
+  <div style="background:white;border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid #E74C3C">
+    <div style="font-weight:800;font-size:15px;color:#1F2937">라이온 킹 <span style="font-size:12px;color:#6B7280;font-weight:400">The Lion King</span></div>
+    <div style="font-size:13px;color:#374151;margin-top:4px">📅 5월 20일 (수) 저녁</div>
+    <div style="font-size:13px;color:#374151">📍 Lyceum Theatre, 21 Wellington St, London</div>
+    <div style="font-size:13px;color:#374151">🎫 예약 완료</div>
+    <div style="font-size:11px;color:#9CA3AF;margin-top:4px">런던 도착 첫날 저녁! 공연 시작 30분 전 도착 권장</div>
+    <a href="https://maps.google.com/?q=Lyceum+Theatre+London" target="_blank" style="font-size:11px;color:#2563EB;margin-top:4px;display:inline-block">📍 극장 위치</a>
+  </div>
+  <div style="background:white;border-radius:10px;padding:14px;border-left:4px solid #8E44AD">
+    <div style="font-weight:800;font-size:15px;color:#1F2937">오페라의 유령 <span style="font-size:12px;color:#6B7280;font-weight:400">The Phantom of the Opera</span></div>
+    <div style="font-size:13px;color:#374151;margin-top:4px">📅 5월 22일 (금) 19:30</div>
+    <div style="font-size:13px;color:#374151">📍 His Majesty's Theatre, Haymarket, London</div>
+    <div style="font-size:13px;color:#374151">🎫 예약 완료 · <b style="color:#DC2626">좌석: Stalls J12-15</b></div>
+    <div style="font-size:11px;color:#9CA3AF;margin-top:4px">정장/스마트 캐주얼 추천. 공연 시작 30분 전 도착</div>
+    <a href="https://maps.google.com/?q=His+Majestys+Theatre+London" target="_blank" style="font-size:11px;color:#2563EB;margin-top:4px;display:inline-block">📍 극장 위치</a>
+  </div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="emergency">
+  <h3>🆘 긴급 연락처</h3>
+  <div class="grid">
+    <div><b>이탈리아</b> 긴급: <span style="color:#DC2626;font-weight:700">112</span></div>
+    <div><b>스위스</b> 긴급: <span style="color:#DC2626;font-weight:700">112</span></div>
+    <div><b>프랑스</b> 긴급: <span style="color:#DC2626;font-weight:700">112</span></div>
+    <div><b>영국</b> 긴급: <span style="color:#DC2626;font-weight:700">999/112</span></div>
+  </div>
+  <div class="extra">
+    <div><b>영사콜센터 24시간:</b> <span style="color:#DC2626">+82-2-3210-0404</span></div>
+    <div>이탈리아: +39-06-802461 · 프랑스: +33-1-4753-0101</div>
+    <div>스위스: +41-31-356-2444 · 영국: +44-20-7227-5500</div>
+  </div>
+</div>
+
+
+<!-- CHECKLIST -->
+<div style="margin:0 14px 24px;background:#F0FDF4;border-radius:14px;padding:18px;border:1px solid #86EFAC">
+  <h3 style="font-size:16px;font-weight:800;color:#166534;margin:0 0 14px">✅ 짐 싸기 체크리스트</h3>
+  <div id="checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px"></div>
+  <div style="background:#DCFCE7;border-radius:8px;padding:10px 14px;margin-top:12px;font-size:12px;color:#166534">
+    <b>짐 전략:</b> 캐리어 2개 (기내반입 사이즈) + 배낭 4개 (1인 1개)<br>
+    가볍게! 7개 도시를 기차로 이동합니다. 세탁은 숙소에서 세제 포드로 해결.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>우리 가족의 특별한 유럽 대모험을 위해 ❤️</div>
+  <div style="margin-top:4px">로마 → 소렌토 → 피렌체 → 베네치아 → 인터라켄 → 파리 → 런던</div>
+</div>
+
+</div><!-- .wrap -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  var map = L.map('europe-map', {
+    dragging: true,
+    touchZoom: true,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    zoomControl: true
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+  map.fitBounds([[38.5, -2], [53, 16]]);
+
+  L.polyline([
+    [41.9,12.5],[40.63,14.38],[43.77,11.26],[45.44,12.32],
+    [46.68,7.86],[48.86,2.35],[51.51,-0.12]
+  ], {color:'#6B7280', weight:2, dashArray:'5,8', opacity:0.7}).addTo(map);
+
+  [
+    {n:'로마',     lat:41.9,   lon:12.5,   c:'#C0392B', r:7},
+    {n:'소렌토',   lat:40.63,  lon:14.38,  c:'#E67E22', r:5},
+    {n:'피렌체',   lat:43.77,  lon:11.26,  c:'#8E44AD', r:6},
+    {n:'베네치아', lat:45.44,  lon:12.32,  c:'#2980B9', r:6},
+    {n:'인터라켄', lat:46.68,  lon:7.86,   c:'#27AE60', r:6},
+    {n:'파리',     lat:48.86,  lon:2.35,   c:'#2C3E50', r:7},
+    {n:'런던',     lat:51.51,  lon:-0.12,  c:'#E74C3C', r:7}
+  ].forEach(function(city){
+    var d = city.r * 2;
+    L.marker([city.lat, city.lon], {
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="transform:translate(-50%,-50%);text-align:center">' +
+              '<div style="width:'+d+'px;height:'+d+'px;background:'+city.c+';border:2px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.4);margin:0 auto"></div>' +
+              '<div style="font-size:10px;font-weight:700;color:'+city.c+';text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;margin-top:2px">'+city.n+'</div>' +
+              '</div>',
+        iconSize: [0, 0],
+        iconAnchor: [0, 0]
+      }),
+      interactive: false
+    }).addTo(map);
+  });
+})();
+</script>
+<script>
+/* ================================================================
+   ✏️  체크리스트 항목 편집 구역
+   ─ 항목 추가 : items 배열에 문자열 한 줄 추가
+   ─ 항목 삭제 : 해당 줄 삭제
+   ─ 항목 수정 : 문자열 내용 변경
+   ─ 카테고리 추가 : { title:'제목', items:['항목1','항목2',...] } 추가
+================================================================ */
+var CHECKLIST = [
+  { title: '서류 & 금융', items: [
+    '여권 (4인 전원)',
+    'UK ETA 확인서 (4인)',
+    '항공 E티켓 (KE931/908)',
+    '전체 예약 확인서 (인쇄+폰)',
+    '여행자 보험',
+    '신용카드 (해외결제 알림)',
+    '현금: EUR, CHF, GBP',
+    '서류 사본 (원본과 분리)',
+  ]},
+  { title: '전자기기', items: [
+    '스마트폰 + 충전기',
+    '보조배터리 (20,000mAh)',
+    '멀티 어댑터 (EU+UK)',
+    'eSIM (Airalo/Ubigi)',
+    '카메라 + SD카드',
+    '아이들 태블릿 + 헤드폰',
+    '오프라인 지도 (구글맵)',
+    '넷플릭스/티빙 다운로드',
+  ]},
+  { title: '의류 (5월)', items: [
+    '얇은 레이어링 (15-25°C)',
+    '비옷 / 접이식 우산',
+    '알프스용 따뜻한 겉옷',
+    '편한 워킹화 (길들이기!)',
+    '샌들 (소렌토/아말피)',
+    '성당용 긴팔/긴치마',
+    '수영복 (해안지역)',
+    '모자 & 선글라스',
+  ]},
+  { title: '가족 필수품', items: [
+    '상비약 & 구급키트',
+    '선크림 (SPF 50+)',
+    '재사용 물병',
+    '열차용 간식',
+    '1인 1 배낭/데이팩',
+    '지퍼백 (젖은옷용)',
+    '세탁 세제 포드',
+    '손 세정제 & 물티슈',
+  ]},
+];
+/* ================================================================ */
+
+(function(){
+  var grid = document.getElementById('checklist-grid');
+  CHECKLIST.forEach(function(cat){
+    var div = document.createElement('div');
+    div.innerHTML = '<div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:6px;border-bottom:2px solid #86EFAC;padding-bottom:3px">' + cat.title + '</div>' +
+      cat.items.map(function(item){
+        return '<label style="display:block;font-size:12px;padding:2px 0"><input type="checkbox" style="margin-right:6px">' + item + '</label>';
+      }).join('');
+    grid.appendChild(div);
+  });
+})();
+
+function switchTab(city, tab, btn, color) {
+  // Hide all tabs for this city
+  const cityEl = document.getElementById(city);
+  cityEl.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  cityEl.querySelectorAll('.tab').forEach(el => { el.classList.remove('active'); el.style.background = '#F3F4F6'; el.style.color = '#374151'; });
+  // Show selected
+  document.getElementById(city + '-' + tab).classList.add('active');
+  btn.classList.add('active');
+  btn.style.background = color;
+  btn.style.color = '#fff';
+}
+</script>
+</body>
+</html>
