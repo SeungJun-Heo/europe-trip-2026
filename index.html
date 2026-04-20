@@ -134,6 +134,24 @@ a{color:#2563EB;text-decoration:none}
 /* Smooth scroll */
 html{scroll-behavior:smooth}
 
+/* Checklist Edit Mode */
+.cl-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.cl-btn{font-size:11px;font-weight:700;padding:5px 11px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;transition:all .15s}
+.cl-edit-toggle{background:#DCFCE7;color:#166534}
+.cl-edit-toggle.on{background:#166534;color:#fff}
+.cl-add-cat-btn{background:#FEF9C3;color:#92400E}
+.cl-reset-btn{background:#FEE2E2;color:#DC2626}
+.cl-add-item-btn{font-size:11px;padding:2px 8px;background:#F0FDF4;color:#166534;border:1px dashed #86EFAC;border-radius:4px;cursor:pointer;margin-top:5px;width:100%;font-family:inherit}
+.cl-del{background:none;border:none;cursor:pointer;color:#EF4444;font-size:13px;font-weight:900;padding:0 3px;line-height:1;flex-shrink:0}
+.cl-input{font-size:12px;border:1px solid #86EFAC;border-radius:4px;padding:2px 6px;font-family:inherit;background:#fff;width:100%;color:#1F2937}
+.cl-cat-header{display:flex;align-items:center;gap:4px;margin-bottom:6px;border-bottom:2px solid #86EFAC;padding-bottom:3px}
+.cl-cat-title{font-size:13px;font-weight:700;color:#166534;flex:1;min-width:0}
+.cl-item-row{display:flex;align-items:center;gap:3px;padding:1px 0}
+.cl-sync-status{font-size:10px;color:#6B7280;margin-left:auto;white-space:nowrap}
+.cl-sync-status.ok{color:#16A34A}
+.cl-sync-status.err{color:#DC2626}
+
+
 @media print{
   .tabs,.city-nav,.bk-btn,.bk-list{display:none!important}
   .tab-content{display:block!important}
@@ -490,7 +508,13 @@ html{scroll-behavior:smooth}
 
 <!-- CHECKLIST -->
 <div style="margin:0 14px 24px;background:#F0FDF4;border-radius:14px;padding:18px;border:1px solid #86EFAC">
-  <h3 style="font-size:16px;font-weight:800;color:#166534;margin:0 0 14px">✅ 짐 싸기 체크리스트</h3>
+  <h3 style="font-size:16px;font-weight:800;color:#166534;margin:0 0 12px">✅ 짐 싸기 체크리스트</h3>
+  <div class="cl-bar">
+    <button class="cl-btn cl-edit-toggle" id="cl-edit-btn" onclick="clToggleEdit()">✏️ 편집</button>
+    <button class="cl-btn cl-add-cat-btn" id="cl-addcat-btn" style="display:none" onclick="clAddCat()">＋ 카테고리</button>
+    <button class="cl-btn cl-reset-btn" id="cl-reset-btn" style="display:none" onclick="clResetChecks()">초기화</button>
+    <span class="cl-sync-status" id="cl-sync-status"></span>
+  </div>
   <div id="checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px"></div>
   <div style="background:#DCFCE7;border-radius:8px;padding:10px 14px;margin-top:12px;font-size:12px;color:#166534">
     <b>짐 전략:</b> 캐리어 3개 (기내반입 사이즈) + 배낭 4개 (1인 1개)<br>
@@ -571,18 +595,19 @@ var CHECKLIST = [
     '기차 예약 확인서 (TGV Lyria, 유로스타)',
     '숙소 예약 확인서',
     '티켓 예약 확인서 (루브르, 디즈니랜드, 라이온킹, 오페라의 유령)',
+    '융프라우 VIP 패스 출력물x4',
     '신용카드 (VISA, MasterCard)',
     '현금: EUR, CHF, GBP',
   ]},
   { title: '전자기기', items: [
-    '스마트폰x3 + 충전기',
+    '스마트폰x4 + 충전기',
     '보조배터리 (10,000mAh)x2',
     '멀티 어댑터 (EU+UK)',
-    'eSIMx2',
+    'eSIMx2, 추가 eSIMx2 (비상용)',
     '아이들 태블릿',
     '유선이어폰x4, 무선이어폰x2',
     '오프라인 지도 (구글맵)',
-    '넷플릭스/티빙 다운로드',
+    '넷플릭스/티빙/Disney+ 다운로드',
   ]},
   { title: '의류 (5월)', items: [
     '접이식 우산x4',
@@ -591,7 +616,7 @@ var CHECKLIST = [
     '양말 인당 4켤레 (세탁 고려)',
     '속옷 인당 4세트 (세탁 고려)',
     '실내용 슬리퍼x4',
-    '여분 신발',
+    '여분 신발x3',
     '성당용 긴팔/긴치마',
     '모자, 선글라스, 안경',
   ]},
@@ -602,7 +627,7 @@ var CHECKLIST = [
     '선크림 (SPF 50+)',
     '칫솔x4, 치약, 면도기',
     '샴푸, 바디워시, 로션',
-    '클렌징 워터',
+    '클렌징 워터, 화장솜',
     '재사용 물병x2',
     '지퍼백 (젖은옷용)',
     '세탁 세제 시트',
@@ -611,16 +636,177 @@ var CHECKLIST = [
 ];
 /* ================================================================ */
 
-(function(){
+/* ─── Checklist State ─── */
+var CL_GIST_ID    = 'b755796c96803e2a453615dd89394f05';
+var CL_GIST_TOKEN = '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';
+var CL_GIST_FILE  = 'checklist.json';
+
+var CL = {
+  cats: null,
+  checks: {},
+  editMode: false,
+  syncTimer: null
+};
+
+function clEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ─── Status ─── */
+function clSetStatus(msg, cls){
+  var el = document.getElementById('cl-sync-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.className = 'cl-sync-status' + (cls ? ' '+cls : '');
+}
+
+/* ─── Gist Sync ─── */
+function clPull(callback){
+  clSetStatus('동기화 중…', '');
+  fetch('https://api.github.com/gists/' + CL_GIST_ID, {
+    headers: { 'Authorization': 'Bearer ' + CL_GIST_TOKEN }
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(g){
+    var raw = g.files && g.files[CL_GIST_FILE] && g.files[CL_GIST_FILE].content;
+    if(raw){
+      var d = JSON.parse(raw);
+      if(d.cats)   CL.cats   = d.cats;
+      if(d.checks) CL.checks = d.checks;
+      if(!CL.cats) CL.cats = clDefaultCats();
+      localStorage.setItem('cl_snap', raw);
+    }
+    clSetStatus('☁️ 동기화됨', 'ok');
+    if(callback) callback();
+  })
+  .catch(function(){
+    clSetStatus('오프라인', '');
+    if(callback) callback();
+  });
+}
+function clPush(){
+  var body = JSON.stringify({ cats: CL.cats, checks: CL.checks });
+  localStorage.setItem('cl_snap', body);
+  clSetStatus('저장 중…', '');
+  fetch('https://api.github.com/gists/' + CL_GIST_ID, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': 'Bearer ' + CL_GIST_TOKEN,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ files: { 'checklist.json': { content: body } } })
+  })
+  .then(function(r){ return r.ok ? clSetStatus('☁️ 동기화됨','ok') : clSetStatus('저장 실패','err'); })
+  .catch(function(){ clSetStatus('오프라인 (로컬 저장됨)',''); });
+}
+function clSchedulePush(){
+  clearTimeout(CL.syncTimer);
+  CL.syncTimer = setTimeout(clPush, 1200);
+}
+
+/* ─── Default Data ─── */
+function clDefaultCats(){
+  return CHECKLIST.map(function(cat){ return { title: cat.title, items: cat.items.slice() }; });
+}
+
+/* ─── Render ─── */
+function clRender(){
   var grid = document.getElementById('checklist-grid');
-  CHECKLIST.forEach(function(cat){
+  if(!grid) return;
+  grid.innerHTML = '';
+  CL.cats.forEach(function(cat, ci){
     var div = document.createElement('div');
-    div.innerHTML = '<div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:6px;border-bottom:2px solid #86EFAC;padding-bottom:3px">' + cat.title + '</div>' +
-      cat.items.map(function(item){
-        return '<label style="display:block;font-size:12px;padding:2px 0"><input type="checkbox" style="margin-right:6px">' + item + '</label>';
-      }).join('');
+    var headerHtml;
+    if(CL.editMode){
+      headerHtml = '<div class="cl-cat-header">' +
+        '<input class="cl-input cl-cat-title" value="'+clEsc(cat.title)+'" ' +
+        'onchange="clSetCatTitle('+ci+',this.value)" ' +
+        'style="font-size:13px;font-weight:700;color:#166534;border:1px solid #86EFAC">' +
+        '<button class="cl-del" onclick="clDelCat('+ci+')" title="카테고리 삭제">✕</button>' +
+        '</div>';
+    } else {
+      headerHtml = '<div class="cl-cat-header"><span class="cl-cat-title">'+clEsc(cat.title)+'</span></div>';
+    }
+    var itemsHtml = cat.items.map(function(item, ii){
+      var key = ci+'-'+ii;
+      if(CL.editMode){
+        return '<div class="cl-item-row">' +
+          '<input class="cl-input" value="'+clEsc(item)+'" ' +
+          'onchange="clSetItem('+ci+','+ii+',this.value)">' +
+          '<button class="cl-del" onclick="clDelItem('+ci+','+ii+')" title="항목 삭제">✕</button>' +
+          '</div>';
+      } else {
+        var chk = CL.checks[key] ? ' checked' : '';
+        var strike = CL.checks[key] ? 'text-decoration:line-through;color:#9CA3AF;' : '';
+        return '<label style="display:flex;align-items:flex-start;gap:5px;font-size:12px;padding:2px 0;cursor:pointer">' +
+          '<input type="checkbox"'+chk+' onchange="clCheck('+ci+','+ii+',this.checked)" style="margin-top:2px;flex-shrink:0">' +
+          '<span style="'+strike+'">'+clEsc(item)+'</span></label>';
+      }
+    }).join('');
+    var addBtnHtml = CL.editMode
+      ? '<button class="cl-add-item-btn" onclick="clAddItem('+ci+')">＋ 항목 추가</button>'
+      : '';
+    div.innerHTML = headerHtml + itemsHtml + addBtnHtml;
     grid.appendChild(div);
   });
+}
+
+/* ─── CRUD ─── */
+function clToggleEdit(){
+  CL.editMode = !CL.editMode;
+  var btn    = document.getElementById('cl-edit-btn');
+  var addcat = document.getElementById('cl-addcat-btn');
+  var reset  = document.getElementById('cl-reset-btn');
+  if(btn){ btn.textContent = CL.editMode ? '✔ 완료' : '✏️ 편집'; btn.className = 'cl-btn cl-edit-toggle'+(CL.editMode?' on':''); }
+  if(addcat) addcat.style.display = CL.editMode ? '' : 'none';
+  if(reset)  reset.style.display  = CL.editMode ? '' : 'none';
+  clRender();
+}
+function clSetCatTitle(ci, val){ CL.cats[ci].title = val; clSchedulePush(); }
+function clDelCat(ci){
+  if(!confirm('['+CL.cats[ci].title+'] 카테고리를 삭제할까요?')) return;
+  CL.cats.splice(ci, 1);
+  var nc = {};
+  Object.keys(CL.checks).forEach(function(k){
+    var p=k.split('-'), c=+p[0], i=+p[1];
+    if(c < ci) nc[k] = CL.checks[k];
+    else if(c > ci) nc[(c-1)+'-'+i] = CL.checks[k];
+  });
+  CL.checks = nc;
+  clSchedulePush(); clRender();
+}
+function clAddCat(){ CL.cats.push({title:'새 카테고리', items:['새 항목']}); clSchedulePush(); clRender(); }
+function clSetItem(ci, ii, val){ CL.cats[ci].items[ii] = val; clSchedulePush(); }
+function clDelItem(ci, ii){
+  CL.cats[ci].items.splice(ii, 1);
+  var nc = {};
+  Object.keys(CL.checks).forEach(function(k){
+    var p=k.split('-'), c=+p[0], i=+p[1];
+    if(c !== ci){ nc[k]=CL.checks[k]; return; }
+    if(i < ii) nc[k]=CL.checks[k];
+    else if(i > ii) nc[c+'-'+(i-1)]=CL.checks[k];
+  });
+  CL.checks = nc;
+  clSchedulePush(); clRender();
+}
+function clAddItem(ci){ CL.cats[ci].items.push('새 항목'); clSchedulePush(); clRender(); }
+function clCheck(ci, ii, val){
+  var key = ci+'-'+ii;
+  if(val) CL.checks[key] = true; else delete CL.checks[key];
+  clSchedulePush(); clRender();
+}
+function clResetChecks(){
+  if(!confirm('모든 체크 표시를 초기화할까요?')) return;
+  CL.checks = {};
+  clSchedulePush(); clRender();
+}
+
+/* ─── Init ─── */
+(function(){
+  /* 로컬 캐시로 즉시 렌더 후 Gist에서 최신 데이터 fetch */
+  var snap = localStorage.getItem('cl_snap');
+  if(snap){ try{ var d=JSON.parse(snap); CL.cats=d.cats; CL.checks=d.checks||{}; }catch(e){} }
+  if(!CL.cats) CL.cats = clDefaultCats();
+  clRender();
+  clPull(function(){ clRender(); });
 })();
 
 function switchTab(city, tab, btn, color) {
