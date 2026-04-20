@@ -669,8 +669,8 @@ function clPull(callback){
     var raw = g.files && g.files[CL_GIST_FILE] && g.files[CL_GIST_FILE].content;
     if(raw){
       var d = JSON.parse(raw);
-      if(d.cats)   CL.cats   = d.cats;
-      if(d.checks) CL.checks = d.checks;
+      if(d.cats && d.cats.length > 0) CL.cats   = d.cats;
+      if(d.checks)                    CL.checks = d.checks;
       if(!CL.cats) CL.cats = clDefaultCats();
       localStorage.setItem('cl_snap', raw);
     }
