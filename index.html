@@ -513,7 +513,7 @@ html{scroll-behavior:smooth}
   <div class="cl-bar">
     <button class="cl-btn cl-edit-toggle" id="cl-edit-btn" onclick="clToggleEdit()">✏️ 편집</button>
     <button class="cl-btn cl-add-cat-btn" id="cl-addcat-btn" style="display:none" onclick="clAddCat()">＋ 카테고리</button>
-    <button class="cl-btn cl-reset-btn" id="cl-reset-btn" style="display:none" onclick="clResetChecks()">초기화</button>
+    <button class="cl-btn cl-reset-btn" id="cl-reset-btn" style="display:none" onclick="clResetChecks()">체크 전체 해제</button>
     <span class="cl-sync-status" id="cl-sync-status"></span>
   </div>
   <div id="checklist-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px"></div>
@@ -684,7 +684,7 @@ function clPull(callback){
   });
 }
 function clPush(){
-  var body = JSON.stringify({ cats: CL.cats, checks: CL.checks });
+  var body = JSON.stringify({ cats: CL.cats, checks: CL.checks }, null, 2);
   localStorage.setItem('cl_snap', body);
   clSetStatus('저장 중…', '');
   fetch('https://api.github.com/gists/' + CL_GIST_ID, {
@@ -795,7 +795,8 @@ function clCheck(ci, ii, val){
   clSchedulePush(); clRender();
 }
 function clResetChecks(){
-  if(!confirm('모든 체크 표시를 초기화할까요?')) return;
+  if(!confirm('체크 표시를 모두 해제할까요?')) return;
+  if(!confirm('정말요? 체크된 항목이 모두 사라집니다.')) return;
   CL.checks = {};
   clSchedulePush(); clRender();
 }
